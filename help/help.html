@@ -1,0 +1,280 @@
+<html>
+	<head>
+		<title>
+			Help “Geosurface *” 
+		</title>
+		<style type="text/css">
+			body { margin: 25px;} 
+			h1 { font-size: 125%}
+			h2 { font-size: 110%; margin: 25px 0 10px 0;}
+			h3 { font-size: 100%; margin: 25px 0 10px 0;}
+			figcaption {
+				font-size: 90%;
+				font-style: italic;
+				margin: 10px 0 15px 0;
+			}
+			section {
+				margin: 10px 0 15px 0;			
+			}
+			footer {
+				margin: 30px 0 15px 0;
+				font-size: 90%;
+				font-style: italic;				
+			}
+			img {
+				margin: 25px 20px 5px 20px;
+			}
+			sup {font-size: 50%;}
+			sub {font-size: 50%;}
+		
+		</style>
+	</head>
+
+	<body>
+
+		<h1>
+			Help for “Geosurface simulation” and “Geosurface deformation” modules for "simSurf"
+		</h1>
+		
+		<section>
+			The new 0.0.1 <i>simSurf</i> modules for georeferenced geological surface processing are here described.
+
+			<figure>
+			  <img src="ims/View3D_ArcScene_01.png" alt="3D view of a sheared surface, suprposed on a DEM">
+				<figcaption>
+					Fig. 1. Example of a sheared and rotated sinusoidal surface with geographic parameters matching those of the Mt. Alpi-Mt. Raparo Aster DEM (Lucania, Southern Italy). The view is from NE to SW. Mt. Raparo is at the right. 3D visualization created with ArcScene (ESRI).	
+				</figcaption>
+			</figure>
+			
+		</section>
+
+		<section>
+			
+			<h2>
+				How to simulate geological surfaces?
+			</h2>
+			
+			The simulation is divided into two consecutive steps: a) analytical formula definition; b) geographical parameters definition.
+			After these phases, it is possible to visualize it and save in a few text formats.
+
+			<h3>
+				Analytical formula definition
+			 </h3>
+
+			Using analytical formulas it is possible to replicate, in a GIS environment, georeferenced theoretical surfaces that can simulate geological surfaces, such as sheared fold trains. 
+			<br /><br />
+			Truly 3D surfaces can have more than one z value for the same x-y point. In the module, this 3D nature can be achieved by the initial creation of a 2.5 surface, i.e., with no more than one z value for x-y point, and then by its deformation via methods such as vertical shear (example in Fig. 1).
+			<br /><br />
+			2.5 D surfaces can be created as analytical functions of a and b coordinates: <i>z =  f( a, b )</i>, defined in the “Geosurface simulation” module (Fig. 2).
+			The a variable represents values in the x-axis orientation (left-to-right vector), while b represent values in the y orientation (bottom-to-top vector). Ranges for a and b values are defined, as well as the number of grid columns and rows, to be used for the generation of the surface (Fig. 2).
+			<br /><br />
+			Since a and b are stored as Numpy array values, the functions used in the “Formula” section should comply with the Numpy syntax in order to use its functions. Otherwise, the calculations will be unsuccessful.
+			<br /><br />
+			A few examples of formulas are:
+			<ul>
+				<li>sin( a * a + b * b )</li>
+				<li>a * b + 1000</li>
+				<li>cos( a ) * 200</li>
+			</ul>
+
+			<figure>
+			  <img src="ims/screenshot_01.png" alt="Geosurface simulation - analytical parameters">
+				<figcaption>
+					Fig. 2. Screenshot of the 'Geosurface simulation' with the analytical parameters used to create the surface displayed in Fig. 5.	
+				</figcaption>
+			</figure>
+
+			<h3>
+				Geographical parameters definition
+			</h3>			
+			After that the analytical surface is defined and created, it can be georeferenced by using the commands in the 'Geographic parameters' widget. The following parameters have to be defined (Figs. 3 and 4):
+			<ul>
+				<li>the height and width of the georeferenced surface to be created</li>
+				<li>its rotation angle with respect to the x-axis</li>
+				<li>the x and y values of the lower-left corner surface ('x min' and 'y min')</li>
+			</ul>
+
+			<figure>
+			  <img src="ims/geosurface_area.png" alt="Geometrical concepts for surface georeferencing">
+				<figcaption>
+					Fig. 3. Geometrical concepts for surface georeferencing.	
+				</figcaption>
+			</figure>	
+			We define the geographical ones, by filling in the values required in the “Geographic parameters” tab, with values matching the target geographical extent (example in Fig. 4).
+			<figure>
+			  <img src="ims/screenshot_02.png" alt="Geosurface simulation - geographical parameters">
+				<figcaption>
+					Fig. 4. Screenshot of the 'Geosurface simulation' with the geographical parameters used to create the surface displayed in Fig. 5. 	
+				</figcaption>
+			</figure>	
+			<h3>
+				Geosurface display and export
+			</h3>			
+			Having created a surface, it is possible to display it with the “View as 3D surface” command, and to save it.
+			<br /><br />
+			From the 'Output' widget, it is possible to save the surface in different formats:
+			<ul>
+				<li>Grass</li>
+				<li>VTK</li>
+				<li>xyz</li>
+				<li>Generate format, for ESRI import and visualization</li>
+				<li>Gas (geological analytical surface): the module internal format</li>
+			</ul>
+			VTK and Grass formats are widely used formats that stores the parameters of the geometrical elements constituting a surface. In our case, they are the triangular faces defining the surfaces, expressed by the coordinates of three points.
+			<br /><br />
+			It is also possible to export the surface in a format that can be read by ArcGIS, the generate format. For importing  in ArcGIS the exported generate file, it is possible to use:
+			<i>3D Analyst Tools -&gt; Conversion -&gt; From File -&gt; ASCII 3D to Feature Class</i>.
+			<br />A visualization of a converted generate file exported from the simulated surface, is displayed with ArcScene in Fig. 5.
+			<br /><br />
+			The Gas format is the internal format for surface in the qgSurf plugin. It is the one required as data input for the “Geosurface deformation” module. 
+			It stores all the procedural parameters: analytical, geographical, as defined in the 'Analytical formula' and 'Geographic parameters', plus the deformational parameters when present (described in the following paragraph). On the other hand, it does not store geometrical information (points or faces), differently from the VTK o Grass formats. 			
+			<figure>
+			  <img src="ims/scene_3d_sim.png" alt="The simulated surface visualized in 3D">
+				<figcaption>
+					Fig. 5. The simulated surface visualized in 3D, together with the Mt.Alpi- Mt. Raparo DEM. Visualization with ArcScene. 	
+				</figcaption>
+			</figure>				
+		</section>
+		<section>		
+			<h2>
+				How to deform geological surfaces?
+			</h2>
+			A geological surface created with the “Geosurface simulation” module can be imported and deformed using the “Geosurface deformation” module. The input file must be in the Gas format since this is the only currently recognized input format.
+			<br /><br />
+			Surface can be changed via displacements, rotations or strains, each one with its matrix or vector representation <a href="#ramsay">[1]</a>. Apart from the displacement, all the other types are expressed as matrices that are multiplied to the initial point positions in order to obtain the final ones. More than a deformation type can be applied in sequence to the same original analytical surfaces: for instance a vertical simple shear followed by displacement and then a rotation (result in Fig. 1).
+			<br /><br />
+			The implemented methods are (Fig. 6):
+			<ul>
+				<li>displacement</li>
+				<li>rotation</li>
+				<li>scaling</li>
+				<li>horizontal simple shear</li>
+				<li>vertical simple shear</li>
+			</ul>
+			<figure>
+			  <img src="ims/deformation_screenshot_01.png" alt="The deformation method window">
+				<figcaption>
+					Fig. 6. The deformation method window. 	
+				</figcaption>
+			</figure>	
+			With the exception of the displacement method, the applied deformations can be automatically centered on the surface center (example for the rotation method case in Fig. 7), in order to maintain the  surface in the surroundings of the defined geographic boundary. However, if preferred, the user can modify the default values.			
+			<figure>
+			  <img src="ims/deformation_screenshot_02.png" alt="The rotation method window">
+				<figcaption>
+					Fig. 7. The rotation method window: note the center definition options, with the default deformation centering option fixed to the surface center. 	
+				</figcaption>
+			</figure>				
+			<h3>
+				Displacement
+			</h3>			
+			A surface can be moved in the space, without rotation or distortion, by given offsets in the x, y and/or z directions (cf. Fig. 8).
+			<br />
+			The formula is:
+			<br />
+			<img src="ims/displacement_equation.png" alt="Displacement equation">
+			<br />
+			The displacement is calculated as the sum of the initial point and the shift vectors.
+			<figure>
+			  <img src="ims/screenshot_displacement_01.png" alt="The displacement window">
+				<figcaption>
+					Fig. 8. The displacement window. 	
+				</figcaption>
+			</figure>			
+			<h3>
+				Rotation
+			</h3>			
+			The surface can be rotated by a rotation angle &omega; around a rotation axis, characterized by given trend (azimuth from geographic North) and plunge values (cf. Fig. 9).
+			<br /><br />
+			The rotated position is calculated by multiplying the rotation matrix with the initial position vector (EQs. 3.11a-c in <a href="#allmendinger">[2]</a>).
+			<br />
+			<img src="ims/rotation_equation.png" alt="Rotation matrix">
+			<br />
+			where:
+			<br />a<sub>11</sub> = cos &omega; + cos<sup>2</sup>&alpha; ( 1 - cos &omega; )
+			<br />a<sub>12</sub>  = - cos &gamma; sin &omega; + cos &alpha; cos &beta; ( 1 - cos &omega; ) 
+			<br />a<sub>13</sub>  = cos &beta; sin &omega; + cos &alpha; cos &gamma; ( 1 - cos &omega; ) 
+			<br />a<sub>21</sub>  = cos &gamma; sin &omega; + cos &alpha; cos &beta; ( 1 - cos &omega; ) 
+			<br />a<sub>22</sub>  = cos &omega; + cos<sup>2</sup> &beta; ( 1 - cos &omega; )
+			<br />a<sub>23</sub>  = - cos &alpha; sin &omega; + cos &beta; cos &gamma; ( 1 - cos &omega; ) 
+			<br />a<sub>31</sub>  = - cos &beta; sin &omega; + cos &alpha; cos &gamma; ( 1 - cos &omega; ) 
+			<br />a<sub>32</sub>  = cos &alpha; sin &omega; + cos &beta; cos &gamma; ( 1 - cos &omega; ) 
+			<br />a<sub>33</sub>  = cos &omega; + cos<sup>2</sup> &gamma; ( 1 - cos &omega; )
+			<br />and &alpha; is the angle between the rotation axis and the x axis, &beta; is the angle between the rotation axis and the y axis, &gamma; is the angle between the rotation axis and the z axis, and &omega; is the rotation angle.
+			<br />The angles between the frame axes and the rotation axis are automatically derived from the rotation axis trend and plunge values.		
+			<figure>
+			  <img src="ims/screenshot_rotation_01.png" alt="The rotation window">
+				<figcaption>
+					Fig. 9. The rotation window. 	
+				</figcaption>
+			</figure>
+			<h3>			
+				Scaling
+			</h3>			
+			The size of the surface is scaled along the frame axes by three scale factors, Sx, Sy and Sz (cf. Fig. 10).
+			<br /><br />
+			The transformation matrix is:			
+			<br />
+			<img src="ims/scaling_equation.png" alt="Scaling matrix">
+			<figure>
+			  <img src="ims/screenshot_scaling_01.png" alt="The scaling window">
+				<figcaption>
+					Fig. 10. The scaling window. 	
+				</figcaption>
+			</figure>			
+			<h3>
+				Horizontal simple shear
+			</h3>			
+			We consider a horizontal simple shear (parallel to the x-y plane) with angle &psi; (psi), along a direction that makes an angle &alpha; (alpha) with the x-axis (Figs. 11 and 12).
+			<figure>
+			  <img src="ims/simple_shear_horiz.png" alt="Shear along the horizontal plane">
+				<figcaption>
+					Fig. 11. Shear along the horizontal plane, defined by the x- and y- axes. Psi is the shear angle. The shear vectors make an angle of alpha with the x-axis. 	
+				</figcaption>
+			</figure>
+			Following the matrix derivation in <a href="#ramsay">[1]</a>, p. 290, the transformation is given by:
+			<br />
+			<img src="ims/simple_shear_horiz_eq.png" alt="Horizontal shear matrix">			
+			<br />where &gamma; is equal to tan( &psi; ).
+			<br /><br />
+			Note the negative sign in the term "-&gamma; sin<sup>2</sup> &alpha;": in <a href="#ramsay">[1]</a>, Eq. C.14 the sign is given as positive, but it appears to be inconsistent with both the derivation and the practical application of the formula.
+			<figure>
+			  <img src="ims/screenshot_horizontal_shear_01.png" alt="The horizontal simple shear window">
+				<figcaption>
+					Fig. 12. The horizontal simple shear window. 	
+				</figcaption>
+			</figure>			
+			<h3>
+				Vertical simple shear
+			</h3>			
+			A surface can be sheared in the vertical plane, by an angle &psi; (psi), along a direction making an angle &alpha; (alpha) with the x-axis (Figs. 13 and 14).
+			<figure>
+			  <img src="ims/simple_shear_vert.png" alt="Shear along a vertical axis">
+				<figcaption>
+					Fig. 13. Shear along a vertical axis. The shear plane is vertical, making an angle of alpha with the x-axis. Psi is the shear angle, with shear acting along horizontal vectors. 	
+				</figcaption>
+			</figure>
+			The transformation is given by:
+			<br /><img src="ims/simple_shear_vert_eq.png" alt="Vertical shear matrix">
+			<br /><br />where &gamma; is equal to tan( &psi; ).
+			<figure>
+			  <img src="ims/screenshot_vertical_shear_01.png" alt="The vertical simple shear window">
+				<figcaption>
+					Fig. 14. The vertical simple shear window. 	
+				</figcaption>
+			</figure>			
+		</section>
+		<section>
+			<h2>
+				References
+			</h2>			
+			<a name="ramsay">[1] Ramsay, J. G., Huber, M. I., 1983. The techniques of modern structural geology. Volume 1: Strain Analysis. Academic Press, Inc. 307 pp.</a>
+			<br />
+			<a name="allmendinger">[2] Allmendinger, R.W., Cardozo, N., Fisher, D. M., 2012. Structural geology algorithms. Vectors and tensors. Cambridge University Press. 289 pp.</a>
+		</section>
+		
+		<footer>
+			<br />--------------------------------------------
+			<br />Doc version 2014-08-31 by Mauro Alberti (alberti.m65@gmail.com)
+		</footer>
+	</body>
+</html>
