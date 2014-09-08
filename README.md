@@ -2,5 +2,5 @@ simSurf
 =======
 
 Simulation and deformation of georeferenced geological surfaces. 
-See help.html in help folder. 
-Tested on Linux Mint.
+See html help in help folder. 
+Developed in Linux Mint OS.
