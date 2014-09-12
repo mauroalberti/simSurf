@@ -67,16 +67,11 @@ Geosurface display and export
 Having created a surface, it is possible to display it with the “View as 3D surface” command, and to save it. 
 
 From the 'Output' widget, it is possible to save the surface in different formats:
-
-Grass
-
-VTK
-
-xyz
-
-Generate format, for ESRI import and visualization
-
-Gas (geological analytical surface): the module internal format
+* Grass
+* VTK
+* xyz
+* Generate format, for ESRI import and visualization
+* Gas (geological analytical surface): the module internal format
 
 
 VTK and Grass formats are widely used formats that stores the parameters of the geometrical elements constituting a surface. In our case, they are the triangular faces defining the surfaces, expressed by the coordinates of three points. 
@@ -98,16 +93,11 @@ A geological surface created with the “Geosurface simulation” module can be 
 Surface can be changed via displacements, rotations or strains, each one with its matrix or vector representation [1]. Apart from the displacement, all the other types are expressed as matrices that are multiplied to the initial point positions in order to obtain the final ones. More than a deformation type can be applied in sequence to the same original analytical surfaces: for instance a vertical simple shear followed by displacement and then a rotation (result in Fig. 1). 
 
 The implemented methods are (Fig. 6):
-
-displacement
-
-rotation
-
-scaling
-
-horizontal simple shear
-
-vertical simple shear
+* displacement
+* rotation
+* scaling
+* horizontal simple shear
+* vertical simple shear
 
 
 ###The deformation method window
