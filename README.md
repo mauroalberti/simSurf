@@ -7,8 +7,8 @@ Two modules, "geosurface_simulation.py" and "geosurface_deformation.py" make pos
 It is developed and tested in Linux Mint OS.
 
 ![alt text](/help/ims/View3D_ArcScene_01.png "3D view of a sheared surface, superposed on a DEM")
-
-*Fig. 1. Example of a sheared and rotated sinusoidal surface with geographic parameters matching those of the Mt. Alpi - Mt. Raparo Aster DEM (Lucania, Southern Italy). The view is from NE to SW. Mt. Raparo is at the right. 3D visualization created with ArcScene (ESRI).*
+<p style="font-size: 90%">
+*Fig. 1. Example of a sheared and rotated sinusoidal surface with geographic parameters matching those of the Mt. Alpi - Mt. Raparo Aster DEM (Lucania, Southern Italy). The view is from NE to SW. Mt. Raparo is at the right. 3D visualization created with ArcScene (ESRI).*</p>
 
 
 How to simulate geological surfaces?
