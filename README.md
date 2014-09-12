@@ -7,7 +7,7 @@ Two modules, "geosurface_simulation.py" and "geosurface_deformation.py" make pos
 
 Developed in Linux Mint OS.
 
-![alt text](/help/help/ims/View3D_ArcScene_01.png "3D view of a sheared surface, superposed on a DEM")
+![alt text](/help/ims/View3D_ArcScene_01.png "3D view of a sheared surface, superposed on a DEM")
 
 
 How to simulate geological surfaces?
