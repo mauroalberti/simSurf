@@ -9,7 +9,7 @@ This project is a pure Python project for simulation and deformation of georefer
 
 
 Two modules, "geosurface_simulation.py" and "geosurface_deformation.py" make possible to simulate and deform georeferenced surfaces. It is developed and tested in Linux Mint OS. 
-To run the two modules, type in the shell:
+To run the two modules, from the downloaded project folder, type in the shell:
 
 *python geosurface_simulation.py*
 
