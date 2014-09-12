@@ -35,9 +35,6 @@ a * b + 1000
 cos( a ) * 200
 
 
-Geosurface simulation - analytical parameters
----------------------------------------------
-
 ![alt text](/help/ims/screenshot_01.png "Geosurface simulation - analytical parameters")
 
 *Fig. 2. Screenshot of the 'Geosurface simulation' with the analytical parameters used to create the surface displayed in Fig. 5.*
@@ -53,19 +50,11 @@ the x and y values of the lower-left corner surface ('x min' and 'y min')
 
 
 
-Geometrical concepts for surface georeferencing
------------------------------------------------
-
-
 ![alt text](/help/ims/geosurface_area.png "Geometrical concepts for surface georeferencing")
 
 *Fig. 3. Geometrical concepts for surface georeferencing.*
 
 We define the geographical ones, by filling in the values required in the “Geographic parameters” tab, with values matching the target geographical extent (example in Fig. 4).
-
-
-Geosurface simulation - geographical parameters
------------------------------------------------
 
 
 ![alt text](/help/ims/screenshot_02.png "Geosurface simulation - geographical parameters")
@@ -94,8 +83,6 @@ A visualization of a converted generate file exported from the simulated surface
 
 The Gas format is the internal format for surface in the qgSurf plugin. It is the one required as data input for the “Geosurface deformation” module. It stores all the procedural parameters: analytical, geographical, as defined in the 'Analytical formula' and 'Geographic parameters', plus the deformational parameters when present (described in the following paragraph). On the other hand, it does not store geometrical information (points or faces), differently from the VTK o Grass formats.
 
-The simulated surface visualized in 3D
-
 
 ![alt text](/help/ims/scene_3d_sim.png "The simulated surface visualized in 3D")
 
@@ -117,8 +104,6 @@ The implemented methods are (Fig. 6):
 * vertical simple shear
 
 
-###The deformation method window
-
 ![alt text](/help/ims/deformation_screenshot_01.png "The deformation method window")
 
 *Fig. 6. The deformation method window.*
@@ -126,7 +111,6 @@ The implemented methods are (Fig. 6):
 
 With the exception of the displacement method, the applied deformations can be automatically centered on the surface center (example for the rotation method case in Fig. 7), in order to maintain the surface in the surroundings of the defined geographic boundary. However, if preferred, the user can modify the default values.
 
-###The rotation method window
 
 ![alt text](/help/ims/deformation_screenshot_02.png "The rotation method window")
 
@@ -143,7 +127,6 @@ Displacement equation
 
 The displacement is calculated as the sum of the initial point and the shift vectors.
 
-The displacement window
 
 ![alt text](/help/ims/screenshot_displacement_01.png "The displacement window")
 
@@ -184,7 +167,6 @@ and α is the angle between the rotation axis and the x axis, β is the angle be
 
 The angles between the frame axes and the rotation axis are automatically derived from the rotation axis trend and plunge values.
 
-The rotation window
 
 ![alt text](/help/ims/screenshot_rotation_01.png "The rotation window")
 
@@ -199,7 +181,7 @@ The size of the surface is scaled along the frame axes by three scale factors, S
 The transformation matrix is:	
 
 Scaling matrix
-The scaling window
+
 
 ![alt text](/help/ims/screenshot_scaling_01.png "The scaling window")
 
@@ -212,7 +194,6 @@ The scaling window
 We consider a horizontal simple shear (parallel to the x-y plane) with angle ψ (psi), along a direction that makes an angle α (alpha) with the x-axis (Figs. 11 and 12).
 
 
-Shear along the horizontal plane
 
 ![alt text](/help/ims/simple_shear_horiz.png "Shear along the horizontal plane")
 
@@ -224,7 +205,7 @@ Horizontal shear matrix
 where γ is equal to tan( ψ ). 
 
 Note the negative sign in the term "-γ sin2 α": in [1], Eq. C.14 the sign is given as positive, but it appears to be inconsistent with both the derivation and the practical application of the formula.
-The horizontal simple shear window
+
 
 ![alt text](/help/ims/screenshot_horizontal_shear_01.png "The horizontal simple shear window")
 
@@ -234,7 +215,7 @@ The horizontal simple shear window
 ###Vertical simple shear
 
 A surface can be sheared in the vertical plane, by an angle ψ (psi), along a direction making an angle α (alpha) with the x-axis (Figs. 13 and 14).
-Shear along a vertical axis
+
 
 ![alt text](/help/ims/simple_shear_vert.png "Shear along a vertical axis")
 
@@ -246,7 +227,6 @@ Vertical shear matrix
 
 where γ is equal to tan( ψ ).
 
-The vertical simple shear window
 
 ![alt text](/help/ims/screenshot_vertical_shear_01.png "The vertical simple shear window")
 
