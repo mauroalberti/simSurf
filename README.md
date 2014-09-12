@@ -8,6 +8,7 @@ This project is a pure Python project for simulation and deformation of georefer
 *Fig. 1. Example of a sheared and rotated sinusoidal surface with geographic parameters matching those of the Mt. Alpi - Mt. Raparo Aster DEM (Lucania, Southern Italy). The view is from NE to SW. Mt. Raparo is at the right. 3D visualization created with ArcScene (ESRI).*
 
 
+
 Two modules, "geosurface_simulation.py" and "geosurface_deformation.py" make possible to simulate and deform georeferenced surfaces. It is developed and tested in Linux Mint OS. 
 To run the two modules, from the downloaded project folder, type in the shell:
 
@@ -16,6 +17,7 @@ To run the two modules, from the downloaded project folder, type in the shell:
 or
 
 *python geosurface_deformation.py*
+
 
 
 How to simulate geological surfaces?
