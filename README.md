@@ -9,7 +9,8 @@ Developed in Linux Mint OS.
 
 ![alt text](/help/ims/View3D_ArcScene_01.png "3D view of a sheared surface, superposed on a DEM")
 
-*Fig. 1. Example of a sheared and rotated sinusoidal surface with geographic parameters matching those of the Mt. Alpi-Mt. Raparo Aster DEM (Lucania, Southern Italy). The view is from NE to SW. Mt. Raparo is at the right. 3D visualization created with ArcScene (ESRI). *
+*Fig. 1. Example of a sheared and rotated sinusoidal surface with geographic parameters matching those of the Mt. Alpi-Mt. Raparo Aster DEM (Lucania, Southern Italy). The view is from NE to SW. Mt. Raparo is at the right. 3D visualization created with ArcScene (ESRI).*
+
 
 How to simulate geological surfaces?
 ------------------------------------
@@ -55,7 +56,10 @@ the x and y values of the lower-left corner surface ('x min' and 'y min')
 Geometrical concepts for surface georeferencing
 -----------------------------------------------
 
-Fig. 3. Geometrical concepts for surface georeferencing.
+
+![alt text](/help/ims/geosurface_area.png "Geosurface simulation - analytical parameters")
+
+*Fig. 3. Geometrical concepts for surface georeferencing.*
 
 We define the geographical ones, by filling in the values required in the “Geographic parameters” tab, with values matching the target geographical extent (example in Fig. 4).
 
@@ -63,8 +67,10 @@ We define the geographical ones, by filling in the values required in the “Geo
 Geosurface simulation - geographical parameters
 -----------------------------------------------
 
-Fig. 4. Screenshot of the 'Geosurface simulation' with the geographical parameters used to create the surface displayed in Fig. 5.
 
+![alt text](/help/ims/screenshot_02.png "Geosurface simulation - analytical parameters")
+
+*Fig. 4. Screenshot of the 'Geosurface simulation' with the geographical parameters used to create the surface displayed in Fig. 5.*
 
 Geosurface display and export
 -----------------------------
@@ -90,8 +96,12 @@ The Gas format is the internal format for surface in the qgSurf plugin. It is th
 The simulated surface visualized in 3D
 
 
-Fig. 5. The simulated surface visualized in 3D, together with the Mt.Alpi- Mt. Raparo DEM. Visualization with ArcScene.
+![alt text](/help/ims/scene_3d_sim.png "Geosurface simulation - analytical parameters")
+
+*Fig. 5. The simulated surface visualized in 3D, together with the Mt.Alpi- Mt. Raparo DEM. Visualization with ArcScene.*
+
 How to deform geological surfaces?
+----------------------------------
 
 A geological surface created with the “Geosurface simulation” module can be imported and deformed using the “Geosurface deformation” module. The input file must be in the Gas format since this is the only currently recognized input format. 
 
@@ -107,15 +117,19 @@ The implemented methods are (Fig. 6):
 
 ###The deformation method window
 
+![alt text](/help/ims/deformation_screenshot_01.png "Geosurface simulation - analytical parameters")
 
-Fig. 6. The deformation method window.
+*Fig. 6. The deformation method window.*
+
 
 With the exception of the displacement method, the applied deformations can be automatically centered on the surface center (example for the rotation method case in Fig. 7), in order to maintain the surface in the surroundings of the defined geographic boundary. However, if preferred, the user can modify the default values.
 
 ###The rotation method window
 
+![alt text](/help/ims/deformation_screenshot_02.png "Geosurface simulation - analytical parameters")
 
-Fig. 7. The rotation method window: note the center definition options, with the default deformation centering option fixed to the surface center.
+*Fig. 7. The rotation method window: note the center definition options, with the default deformation centering option fixed to the surface center.*
+
 
 ###Displacement
 
@@ -129,9 +143,11 @@ The displacement is calculated as the sum of the initial point and the shift vec
 
 The displacement window
 
+![alt text](/help/ims/screenshot_displacement_01.png "Geosurface simulation - analytical parameters")
+
+*Fig. 8. The displacement window.*
 
 
-Fig. 8. The displacement window.
 
 ###Rotation
 
@@ -168,7 +184,10 @@ The angles between the frame axes and the rotation axis are automatically derive
 
 The rotation window
 
-Fig. 9. The rotation window.
+![alt text](/help/ims/screenshot_rotation_01.png "Geosurface simulation - analytical parameters")
+
+*Fig. 9. The rotation window.*
+
 
 
 ###Scaling
@@ -180,8 +199,10 @@ The transformation matrix is:
 Scaling matrix
 The scaling window
 
+![alt text](/help/ims/screenshot_scaling_01.png "Geosurface simulation - analytical parameters")
 
-Fig. 10. The scaling window.
+*Fig. 10. The scaling window.*
+
 
 
 ###Horizontal simple shear
@@ -191,7 +212,10 @@ We consider a horizontal simple shear (parallel to the x-y plane) with angle ψ 
 
 Shear along the horizontal plane
 
-Fig. 11. Shear along the horizontal plane, defined by the x- and y- axes. Psi is the shear angle. The shear vectors make an angle of alpha with the x-axis.
+![alt text](/help/ims/simple_shear_horiz.png "Geosurface simulation - analytical parameters")
+
+*Fig. 11. Shear along the horizontal plane, defined by the x- and y- axes. Psi is the shear angle. The shear vectors make an angle of alpha with the x-axis.*
+
 
 Following the matrix derivation in [1], p. 290, the transformation is given by: 
 Horizontal shear matrix	
@@ -200,14 +224,20 @@ where γ is equal to tan( ψ ).
 Note the negative sign in the term "-γ sin2 α": in [1], Eq. C.14 the sign is given as positive, but it appears to be inconsistent with both the derivation and the practical application of the formula.
 The horizontal simple shear window
 
-Fig. 12. The horizontal simple shear window.
+![alt text](/help/ims/screenshot_horizontal_shear_01.png "Geosurface simulation - analytical parameters")
+
+*Fig. 12. The horizontal simple shear window.*
+
 
 ###Vertical simple shear
 
 A surface can be sheared in the vertical plane, by an angle ψ (psi), along a direction making an angle α (alpha) with the x-axis (Figs. 13 and 14).
 Shear along a vertical axis
 
-Fig. 13. Shear along a vertical axis. The shear plane is vertical, making an angle of alpha with the x-axis. Psi is the shear angle, with shear acting along horizontal vectors.
+![alt text](/help/ims/simple_shear_vert.png "Geosurface simulation - analytical parameters")
+
+*Fig. 13. Shear along a vertical axis. The shear plane is vertical, making an angle of alpha with the x-axis. Psi is the shear angle, with shear acting along horizontal vectors.*
+
 
 The transformation is given by: 
 Vertical shear matrix 
@@ -216,8 +246,10 @@ where γ is equal to tan( ψ ).
 
 The vertical simple shear window
 
+![alt text](/help/ims/screenshot_vertical_shear_01.png "Geosurface simulation - analytical parameters")
 
-Fig. 14. The vertical simple shear window.
+*Fig. 14. The vertical simple shear window.*
+
 
 
 References
