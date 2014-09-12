@@ -22,9 +22,13 @@ Truly 3D surfaces can have more than one z value for the same x-y point. In the 
 Since a and b are stored as Numpy array values, the functions used in the “Formula” section should comply with the Numpy syntax in order to use its functions. Otherwise, the calculations will be unsuccessful. 
 
 A few examples of formulas are:
+
 sin( a * a + b * b )
+
 a * b + 1000
+
 cos( a ) * 200
+
 
 Geosurface simulation - analytical parameters
 ---------------------------------------------
@@ -63,11 +67,17 @@ Geosurface display and export
 Having created a surface, it is possible to display it with the “View as 3D surface” command, and to save it. 
 
 From the 'Output' widget, it is possible to save the surface in different formats:
+
 Grass
+
 VTK
+
 xyz
+
 Generate format, for ESRI import and visualization
+
 Gas (geological analytical surface): the module internal format
+
 
 VTK and Grass formats are widely used formats that stores the parameters of the geometrical elements constituting a surface. In our case, they are the triangular faces defining the surfaces, expressed by the coordinates of three points. 
 
@@ -88,11 +98,17 @@ A geological surface created with the “Geosurface simulation” module can be 
 Surface can be changed via displacements, rotations or strains, each one with its matrix or vector representation [1]. Apart from the displacement, all the other types are expressed as matrices that are multiplied to the initial point positions in order to obtain the final ones. More than a deformation type can be applied in sequence to the same original analytical surfaces: for instance a vertical simple shear followed by displacement and then a rotation (result in Fig. 1). 
 
 The implemented methods are (Fig. 6):
+
 displacement
+
 rotation
+
 scaling
+
 horizontal simple shear
+
 vertical simple shear
+
 
 ###The deformation method window
 
@@ -109,8 +125,11 @@ Fig. 7. The rotation method window: note the center definition options, with the
 ###Displacement
 
 A surface can be moved in the space, without rotation or distortion, by given offsets in the x, y and/or z directions (cf. Fig. 8). 
+
 The formula is: 
+
 Displacement equation 
+
 The displacement is calculated as the sum of the initial point and the shift vectors.
 
 The displacement window
@@ -124,28 +143,45 @@ Fig. 8. The displacement window.
 The surface can be rotated by a rotation angle ω around a rotation axis, characterized by given trend (azimuth from geographic North) and plunge values (cf. Fig. 9). 
 
 The rotated position is calculated by multiplying the rotation matrix with the initial position vector (EQs. 3.11a-c in [2]). 
+
 Rotation matrix 
+
 where: 
+
 a11 = cos ω + cos2α ( 1 - cos ω ) 
+
 a12 = - cos γ sin ω + cos α cos β ( 1 - cos ω ) 
+
 a13 = cos β sin ω + cos α cos γ ( 1 - cos ω ) 
+
 a21 = cos γ sin ω + cos α cos β ( 1 - cos ω ) 
+
 a22 = cos ω + cos2 β ( 1 - cos ω ) 
+
 a23 = - cos α sin ω + cos β cos γ ( 1 - cos ω ) 
+
 a31 = - cos β sin ω + cos α cos γ ( 1 - cos ω ) 
+
 a32 = cos α sin ω + cos β cos γ ( 1 - cos ω ) 
+
 a33 = cos ω + cos2 γ ( 1 - cos ω ) 
+
+
 and α is the angle between the rotation axis and the x axis, β is the angle between the rotation axis and the y axis, γ is the angle between the rotation axis and the z axis, and ω is the rotation angle. 
+
 The angles between the frame axes and the rotation axis are automatically derived from the rotation axis trend and plunge values.
+
 The rotation window
 
 Fig. 9. The rotation window.
+
 
 ###Scaling
 
 The size of the surface is scaled along the frame axes by three scale factors, Sx, Sy and Sz (cf. Fig. 10). 
 
 The transformation matrix is:	
+
 Scaling matrix
 The scaling window
 
@@ -175,11 +211,14 @@ Fig. 12. The horizontal simple shear window.
 
 A surface can be sheared in the vertical plane, by an angle ψ (psi), along a direction making an angle α (alpha) with the x-axis (Figs. 13 and 14).
 Shear along a vertical axis
+
 Fig. 13. Shear along a vertical axis. The shear plane is vertical, making an angle of alpha with the x-axis. Psi is the shear angle, with shear acting along horizontal vectors.
+
 The transformation is given by: 
 Vertical shear matrix 
 
 where γ is equal to tan( ψ ).
+
 The vertical simple shear window
 
 
