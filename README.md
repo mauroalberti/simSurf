@@ -146,23 +146,23 @@ Rotation matrix
 
 where: 
 
-a<sub>11</sub> = cos ω + cos2α ( 1 - cos ω ) 
+a<sub>11</sub> = cos ω + cos<sup>2</sup>α ( 1 - cos ω ) 
 
-a12 = - cos γ sin ω + cos α cos β ( 1 - cos ω ) 
+a<sub>12</sub> = - cos γ sin ω + cos α cos β ( 1 - cos ω ) 
 
-a13 = cos β sin ω + cos α cos γ ( 1 - cos ω ) 
+a<sub>13</sub> = cos β sin ω + cos α cos γ ( 1 - cos ω ) 
 
-a21 = cos γ sin ω + cos α cos β ( 1 - cos ω ) 
+a<sub>21</sub> = cos γ sin ω + cos α cos β ( 1 - cos ω ) 
 
-a22 = cos ω + cos2 β ( 1 - cos ω ) 
+a<sub>22</sub> = cos ω + cos<sup>2</sup>β ( 1 - cos ω ) 
 
-a23 = - cos α sin ω + cos β cos γ ( 1 - cos ω ) 
+a<sub>23</sub> = - cos α sin ω + cos β cos γ ( 1 - cos ω ) 
 
-a31 = - cos β sin ω + cos α cos γ ( 1 - cos ω ) 
+a<sub>31</sub> = - cos β sin ω + cos α cos γ ( 1 - cos ω ) 
 
-a32 = cos α sin ω + cos β cos γ ( 1 - cos ω ) 
+a<sub>32</sub> = cos α sin ω + cos β cos γ ( 1 - cos ω ) 
 
-a33 = cos ω + cos2 γ ( 1 - cos ω ) 
+a<sub>33</sub> = cos ω + cos<sup>2</sup>γ ( 1 - cos ω ) 
 
 
 and α is the angle between the rotation axis and the x axis, β is the angle between the rotation axis and the y axis, γ is the angle between the rotation axis and the z axis, and ω is the rotation angle. 
