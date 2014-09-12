@@ -146,7 +146,7 @@ Rotation matrix
 
 where: 
 
-a~11~ = cos ω + cos2α ( 1 - cos ω ) 
+a<sub>11</sub> = cos ω + cos2α ( 1 - cos ω ) 
 
 a12 = - cos γ sin ω + cos α cos β ( 1 - cos ω ) 
 
