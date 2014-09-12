@@ -3,8 +3,12 @@ simSurf
 
 This project is a pure Python project for simulation and deformation of georeferenced geological surfaces. It is an updated version of the simulation and deformation modules in the qgSurf plugin (vers. 0.3.3) for Quantum GIS.
 
-Two modules, "geosurface_simulation.py" and "geosurface_deformation.py" make possible to simulate and deform georeferenced surfaces. It is developed and tested in Linux Mint OS. 
+![alt text](/help/ims/View3D_ArcScene_01.png "3D view of a sheared surface, superposed on a DEM")
 
+*Fig. 1. Example of a sheared and rotated sinusoidal surface with geographic parameters matching those of the Mt. Alpi - Mt. Raparo Aster DEM (Lucania, Southern Italy). The view is from NE to SW. Mt. Raparo is at the right. 3D visualization created with ArcScene (ESRI).*
+
+
+Two modules, "geosurface_simulation.py" and "geosurface_deformation.py" make possible to simulate and deform georeferenced surfaces. It is developed and tested in Linux Mint OS. 
 To run the two modules, type in the shell:
 
 *python geosurface_simulation.py*
@@ -12,11 +16,6 @@ To run the two modules, type in the shell:
 or
 
 *python geosurface_deformation.py*
-
-
-![alt text](/help/ims/View3D_ArcScene_01.png "3D view of a sheared surface, superposed on a DEM")
-
-*Fig. 1. Example of a sheared and rotated sinusoidal surface with geographic parameters matching those of the Mt. Alpi - Mt. Raparo Aster DEM (Lucania, Southern Italy). The view is from NE to SW. Mt. Raparo is at the right. 3D visualization created with ArcScene (ESRI).*
 
 
 How to simulate geological surfaces?
