@@ -15,8 +15,11 @@ How to simulate geological surfaces?
 ------------------------------------
 
 The simulation is divided into two consecutive steps: 
-*a) analytical formula definition; 
-*b) geographical parameters definition. 
+
+a) analytical formula definition; 
+
+b) geographical parameters definition. 
+
 After these phases, it is possible to visualize it and save in a few text formats.
 
 ###Analytical formula definition
