@@ -36,8 +36,8 @@ cos( a ) * 200
 Geosurface simulation - analytical parameters
 ---------------------------------------------
 
-
-Fig. 2. Screenshot of the 'Geosurface simulation' with the analytical parameters used to create the surface displayed in Fig. 5.
+![alt text](/help/ims/screenshot_01.png "Geosurface simulation - analytical parameters")
+*Fig. 2. Screenshot of the 'Geosurface simulation' with the analytical parameters used to create the surface displayed in Fig. 5.*
 
 
 Geographical parameters definition
