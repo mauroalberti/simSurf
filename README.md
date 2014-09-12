@@ -9,6 +9,7 @@ Developed in Linux Mint OS.
 
 ![alt text](/help/ims/View3D_ArcScene_01.png "3D view of a sheared surface, superposed on a DEM")
 
+*Fig. 1. Example of a sheared and rotated sinusoidal surface with geographic parameters matching those of the Mt. Alpi-Mt. Raparo Aster DEM (Lucania, Southern Italy). The view is from NE to SW. Mt. Raparo is at the right. 3D visualization created with ArcScene (ESRI). *
 
 How to simulate geological surfaces?
 ------------------------------------
@@ -37,6 +38,7 @@ Geosurface simulation - analytical parameters
 ---------------------------------------------
 
 ![alt text](/help/ims/screenshot_01.png "Geosurface simulation - analytical parameters")
+
 *Fig. 2. Screenshot of the 'Geosurface simulation' with the analytical parameters used to create the surface displayed in Fig. 5.*
 
 
