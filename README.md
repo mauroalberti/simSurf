@@ -51,7 +51,6 @@ The following parameters have to be defined (Figs. 3 and 4):
 * the x and y values of the lower-left corner surface ('x min' and 'y min')
 
 
-
 ![alt text](/help/ims/geosurface_area.png "Geometrical concepts for surface georeferencing")
 
 *Fig. 3. Geometrical concepts for surface georeferencing.*
@@ -79,10 +78,9 @@ From the 'Output' widget, it is possible to save the surface in different format
 
 VTK and Grass formats are widely used formats that stores the parameters of the geometrical elements constituting a surface. In our case, they are the triangular faces defining the surfaces, expressed by the coordinates of three points. 
 
-It is also possible to export the surface in a format that can be read by ArcGIS, the generate format. For importing in ArcGIS the exported generate file, it is possible to use: 3D Analyst Tools -> Conversion -> From File -> ASCII 3D to Feature Class. 
+It is also possible to export the surface in a format that can be read by ArcGIS, the generate format. For importing in ArcGIS the exported generate file, it is possible to use: *3D Analyst Tools -> Conversion -> From File -> ASCII 3D to Feature Class*. 
 
 A visualization of a converted generate file exported from the simulated surface, is displayed with ArcScene in Fig. 5. 
-
 The Gas format is the internal format for surface in the qgSurf plugin. It is the one required as data input for the “Geosurface deformation” module. It stores all the procedural parameters: analytical, geographical, as defined in the 'Analytical formula' and 'Geographic parameters', plus the deformational parameters when present (described in the following paragraph). On the other hand, it does not store geometrical information (points or faces), differently from the VTK o Grass formats.
 
 
@@ -125,7 +123,7 @@ A surface can be moved in the space, without rotation or distortion, by given of
 
 The formula is: 
 
-Displacement equation 
+![alt text](/help/ims/displacement_equation.png "Displacement equation")
 
 The displacement is calculated as the sum of the initial point and the shift vectors.
 
@@ -134,15 +132,13 @@ The displacement is calculated as the sum of the initial point and the shift vec
 
 *Fig. 8. The displacement window.*
 
-
-
 ###Rotation
 
 The surface can be rotated by a rotation angle ω around a rotation axis, characterized by given trend (azimuth from geographic North) and plunge values (cf. Fig. 9). 
 
 The rotated position is calculated by multiplying the rotation matrix with the initial position vector (EQs. 3.11a-c in [2]). 
 
-Rotation matrix 
+![alt text](/help/ims/rotation_equation.png "Rotation matrix ")
 
 where: 
 
@@ -182,13 +178,12 @@ The size of the surface is scaled along the frame axes by three scale factors, S
 
 The transformation matrix is:	
 
-Scaling matrix
+![alt text](/help/ims/scaling_equation.png "Scaling matrix")
 
 
 ![alt text](/help/ims/screenshot_scaling_01.png "The scaling window")
 
 *Fig. 10. The scaling window.*
-
 
 
 ###Horizontal simple shear
@@ -203,7 +198,8 @@ We consider a horizontal simple shear (parallel to the x-y plane) with angle ψ 
 
 
 Following the matrix derivation in [1], p. 290, the transformation is given by: 
-Horizontal shear matrix	
+
+![alt text](/help/ims/simple_shear_horiz_eq.png "Horizontal shear matrix	")
 where γ is equal to tan( ψ ). 
 
 Note the negative sign in the term "-γ sin2 α": in [1], Eq. C.14 the sign is given as positive, but it appears to be inconsistent with both the derivation and the practical application of the formula.
@@ -225,7 +221,8 @@ A surface can be sheared in the vertical plane, by an angle ψ (psi), along a di
 
 
 The transformation is given by: 
-Vertical shear matrix 
+
+![alt text](/help/ims/simple_shear_vert_eq.png "Vertical shear matrix ")
 
 where γ is equal to tan( ψ ).
 
