@@ -6,6 +6,9 @@ Two modules, "geosurface_simulation.py" and "geosurface_deformation.py" make pos
 Developed in Linux Mint OS.
 
 How to simulate geological surfaces?
+------------------------------------
+------------------------------------
+
 
 The simulation is divided into two consecutive steps: a) analytical formula definition; b) geographical parameters definition. After these phases, it is possible to visualize it and save in a few text formats.
 Analytical formula definition
@@ -31,11 +34,20 @@ the height and width of the georeferenced surface to be created
 its rotation angle with respect to the x-axis
 the x and y values of the lower-left corner surface ('x min' and 'y min')
 Geometrical concepts for surface georeferencing
+-----------------------------------------------
+
 Fig. 3. Geometrical concepts for surface georeferencing.
+
 We define the geographical ones, by filling in the values required in the “Geographic parameters” tab, with values matching the target geographical extent (example in Fig. 4).
+
 Geosurface simulation - geographical parameters
+-----------------------------------------------
+
 Fig. 4. Screenshot of the 'Geosurface simulation' with the geographical parameters used to create the surface displayed in Fig. 5.
+
+
 Geosurface display and export
+-----------------------------
 
 Having created a surface, it is possible to display it with the “View as 3D surface” command, and to save it. 
 
@@ -128,9 +140,15 @@ Vertical shear matrix
 
 where γ is equal to tan( ψ ).
 The vertical simple shear window
+
+
 Fig. 14. The vertical simple shear window.
+
 References
+----------
+----------
 
 [1] Ramsay, J. G., Huber, M. I., 1983. The techniques of modern structural geology. Volume 1: Strain Analysis. Academic Press, Inc. 307 pp. 
+
 [2] Allmendinger, R.W., Cardozo, N., Fisher, D. M., 2012. Structural geology algorithms. Vectors and tensors. Cambridge University Press. 289 pp.
 
