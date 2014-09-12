@@ -9,7 +9,7 @@ Developed in Linux Mint OS.
 
 ![alt text](/help/ims/View3D_ArcScene_01.png "3D view of a sheared surface, superposed on a DEM")
 
-*Fig. 1. Example of a sheared and rotated sinusoidal surface with geographic parameters matching those of the Mt. Alpi-Mt. Raparo Aster DEM (Lucania, Southern Italy). The view is from NE to SW. Mt. Raparo is at the right. 3D visualization created with ArcScene (ESRI).*
+*Fig. 1. Example of a sheared and rotated sinusoidal surface with geographic parameters matching those of the Mt. Alpi - Mt. Raparo Aster DEM (Lucania, Southern Italy). The view is from NE to SW. Mt. Raparo is at the right. 3D visualization created with ArcScene (ESRI).*
 
 
 How to simulate geological surfaces?
@@ -43,10 +43,12 @@ cos( a ) * 200
 Geographical parameters definition
 ----------------------------------
 
-After that the analytical surface is defined and created, it can be georeferenced by using the commands in the 'Geographic parameters' widget. The following parameters have to be defined (Figs. 3 and 4):
-the height and width of the georeferenced surface to be created
-its rotation angle with respect to the x-axis
-the x and y values of the lower-left corner surface ('x min' and 'y min')
+After that the analytical surface is defined and created, it can be georeferenced by using the commands in the 'Geographic parameters' widget. 
+
+The following parameters have to be defined (Figs. 3 and 4):
+* the height and width of the georeferenced surface to be created
+* its rotation angle with respect to the x-axis
+* the x and y values of the lower-left corner surface ('x min' and 'y min')
 
 
 
@@ -144,7 +146,7 @@ Rotation matrix
 
 where: 
 
-a11 = cos ω + cos2α ( 1 - cos ω ) 
+a~11~ = cos ω + cos2α ( 1 - cos ω ) 
 
 a12 = - cos γ sin ω + cos α cos β ( 1 - cos ω ) 
 
