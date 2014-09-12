@@ -1,18 +1,19 @@
 simSurf
 =======
 
-A pure Python project for simulation and deformation of georeferenced geological surfaces. 
-
-It is an updated version of the simulation and deformation modules in the qgSurf plugin (vers. 0.3.3) for Quantum GIS.
+This project is a pure Python project for simulation and deformation of georeferenced geological surfaces. It is an updated version of the simulation and deformation modules in the qgSurf plugin (vers. 0.3.3) for Quantum GIS.
 
 Two modules, "geosurface_simulation.py" and "geosurface_deformation.py" make possible to simulate and deform georeferenced surfaces.
 
 It is developed and tested in Linux Mint OS. 
 
 To run the two modules:
+
 *python geosurface_simulation.py*
+
 or
-**python geosurface_deformation.py*
+
+*python geosurface_deformation.py*
 
 
 ![alt text](/help/ims/View3D_ArcScene_01.png "3D view of a sheared surface, superposed on a DEM")
