@@ -6,8 +6,8 @@
 
  Simulation and deformation of georeferenced geological surfaces
                               -------------------
-        version              : 0.0.1
-        copyright            : (C) 2014 by Mauro Alberti - www.malg.eu
+        version              : 0.0.2
+        copyright            : (C) 2014-2016 by Mauro Alberti - www.malg.eu
         email                : alberti.m65@gmail.com
  ***************************************************************************/
 
@@ -46,15 +46,21 @@ from geosurf_pure.surf_io import geosurface_export_vtk, geosurface_export_grass,
 from mpl.mpl_widget import view_3D_surface
 
 
-__version__ = "0.0.1"
+__version__ = "0.0.2"
         
-          
-class GeosurfaceSimulationDialog( QDialog ):
 
 
-    def __init__( self ):
 
-        super( GeosurfaceSimulationDialog, self ).__init__() 
+class GeosurfaceSimulationDialog( QDialog):
+
+
+    def __init__(self, application_dir, help_html_subpath):
+
+        super( GeosurfaceSimulationDialog, self ).__init__()
+
+        self.application_dir = application_dir
+        self.help_html_subpath = help_html_subpath
+
         self.analytical_surface_params = None
         self.geographical_surface_params = None
                             
@@ -72,7 +78,7 @@ class GeosurfaceSimulationDialog( QDialog ):
         main_widget.addTab( self.setup_help_tab(), 
                             "Help" ) 
                             
-        dialog_layout.addWidget( main_widget )                                     
+        dialog_layout.addWidget(main_widget)
         self.setLayout( dialog_layout )                    
         self.adjustSize()                       
         self.setWindowTitle( 'simSurf - Geosurface simulation' )        
@@ -260,7 +266,8 @@ class GeosurfaceSimulationDialog( QDialog ):
 
     def open_html_help( self ):        
 
-        webbrowser.open('./help/help.html', new = True )
+        help_file_path = os.path.join(self.application_dir, self.help_html_subpath)
+        webbrowser.open(help_file_path, new=True)
       
       
     def calculate_z_array(self):
@@ -478,9 +485,18 @@ class GeosurfaceSimulationDialog( QDialog ):
 def main():
     """
     Main of the module.
-    """    
+    """
+
+    help_folder = 'help'
+    help_file_name = 'help.html'
+
+    ##
+
+    help_file_subpath = os.path.join(help_folder, help_file_name)
+    appl_dir = os.path.dirname(os.path.realpath(__file__))
+
     app = QApplication(sys.argv)    
-    form = GeosurfaceSimulationDialog()
+    form = GeosurfaceSimulationDialog(appl_dir, help_file_subpath)
     form.show()
     app.exec_()
 
@@ -488,10 +504,3 @@ def main():
 main()
 
 
-
-
-
-
-
-
-         

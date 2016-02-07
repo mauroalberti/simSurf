@@ -1,7 +1,7 @@
 <html>
 	<head>
 		<title>
-			Help “Geosurface *” 
+			simSurf help 
 		</title>
 		<style type="text/css">
 			body { margin: 25px;} 
@@ -33,11 +33,11 @@
 	<body>
 
 		<h1>
-			Help for “Geosurface simulation” and “Geosurface deformation” modules for "simSurf"
+			Help for simSurf <i>Geosurface simulation</i> and <i>Geosurface deformation</i> modules - vers. 0.0.2
 		</h1>
 		
 		<section>
-			The new 0.0.1 <i>simSurf</i> modules for georeferenced geological surface processing are here described.
+			<i>simSurf</i> consists of two modules for simulating and deforming georeferenced analytical 3D surfaces, that could represent (unfaulted) geological surfaces.
 
 			<figure>
 			  <img src="ims/View3D_ArcScene_01.png" alt="3D view of a sheared surface, suprposed on a DEM">
@@ -65,10 +65,10 @@
 			<br /><br />
 			Truly 3D surfaces can have more than one z value for the same x-y point. In the module, this 3D nature can be achieved by the initial creation of a 2.5 surface, i.e., with no more than one z value for x-y point, and then by its deformation via methods such as vertical shear (example in Fig. 1).
 			<br /><br />
-			2.5 D surfaces can be created as analytical functions of a and b coordinates: <i>z =  f( a, b )</i>, defined in the “Geosurface simulation” module (Fig. 2).
+			2.5 D surfaces can be created as analytical functions of a and b coordinates: <i>z =  f( a, b )</i>, defined in the <i>Geosurface simulation</i> module (Fig. 2).
 			The a variable represents values in the x-axis orientation (left-to-right vector), while b represent values in the y orientation (bottom-to-top vector). Ranges for a and b values are defined, as well as the number of grid columns and rows, to be used for the generation of the surface (Fig. 2).
 			<br /><br />
-			Since a and b are stored as Numpy array values, the functions used in the “Formula” section should comply with the Numpy syntax in order to use its functions. Otherwise, the calculations will be unsuccessful.
+			Since a and b are stored as Numpy array values, the functions used in the <i>Formula</i> section should comply with the Numpy syntax in order to use its functions. Otherwise, the calculations will be unsuccessful.
 			<br /><br />
 			A few examples of formulas are:
 			<ul>
@@ -100,7 +100,7 @@
 					Fig. 3. Geometrical concepts for surface georeferencing.	
 				</figcaption>
 			</figure>	
-			We define the geographical ones, by filling in the values required in the “Geographic parameters” tab, with values matching the target geographical extent (example in Fig. 4).
+			We define the geographical ones, by filling in the values required in the <i>Geographic parameters</i> tab, with values matching the target geographical extent (example in Fig. 4).
 			<figure>
 			  <img src="ims/screenshot_02.png" alt="Geosurface simulation - geographical parameters">
 				<figcaption>
@@ -110,7 +110,7 @@
 			<h3>
 				Geosurface display and export
 			</h3>			
-			Having created a surface, it is possible to display it with the “View as 3D surface” command, and to save it.
+			Having created a surface, it is possible to display it with the <i>View as 3D surface</i> command, and to save it.
 			<br /><br />
 			From the 'Output' widget, it is possible to save the surface in different formats:
 			<ul>
@@ -126,7 +126,7 @@
 			<i>3D Analyst Tools -&gt; Conversion -&gt; From File -&gt; ASCII 3D to Feature Class</i>.
 			<br />A visualization of a converted generate file exported from the simulated surface, is displayed with ArcScene in Fig. 5.
 			<br /><br />
-			The Gas format is the internal format for surface in the qgSurf plugin. It is the one required as data input for the “Geosurface deformation” module. 
+			The Gas format is the internal format for surface in the qgSurf plugin. It is the one required as data input for the <i>Geosurface deformation</i> module. 
 			It stores all the procedural parameters: analytical, geographical, as defined in the 'Analytical formula' and 'Geographic parameters', plus the deformational parameters when present (described in the following paragraph). On the other hand, it does not store geometrical information (points or faces), differently from the VTK o Grass formats. 			
 			<figure>
 			  <img src="ims/scene_3d_sim.png" alt="The simulated surface visualized in 3D">
@@ -139,7 +139,7 @@
 			<h2>
 				How to deform geological surfaces?
 			</h2>
-			A geological surface created with the “Geosurface simulation” module can be imported and deformed using the “Geosurface deformation” module. The input file must be in the Gas format since this is the only currently recognized input format.
+			A geological surface created with the <i>Geosurface simulation</i> module can be imported and deformed using the <i>Geosurface deformation</i> module. The input file must be in the Gas format since this is the only currently recognized input format.
 			<br /><br />
 			Surface can be changed via displacements, rotations or strains, each one with its matrix or vector representation <a href="#ramsay">[1]</a>. Apart from the displacement, all the other types are expressed as matrices that are multiplied to the initial point positions in order to obtain the final ones. More than a deformation type can be applied in sequence to the same original analytical surfaces: for instance a vertical simple shear followed by displacement and then a rotation (result in Fig. 1).
 			<br /><br />
@@ -274,7 +274,7 @@
 		
 		<footer>
 			<br />--------------------------------------------
-			<br />Doc version 2014-08-31 by Mauro Alberti (alberti.m65@gmail.com)
+			<br />Doc version 2016-02-07 by Mauro Alberti (alberti.m65@gmail.com)
 		</footer>
 	</body>
 </html>

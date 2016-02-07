@@ -7,8 +7,8 @@
 
  Simulation and deformation of georeferenced geological surfaces
                               -------------------
-        version              : 0.0.1
-        copyright            : (C) 2014 by Mauro Alberti - www.malg.eu
+        version              : 0.0.2
+        copyright            : (C) 2014-2016 by Mauro Alberti - www.malg.eu
         email                : alberti.m65@gmail.com
  ***************************************************************************/
 
@@ -39,17 +39,20 @@ from geosurf_pure.errors import AnaliticSurfaceIOException, AnaliticSurfaceCalcE
 from mpl.mpl_widget import view_3D_surface
  
  
-__version__ = "0.0.1"
+__version__ = "0.0.2"
 
       
         
 class GeosurfaceDeformationDialog( QDialog ):
     
 
-    def __init__( self ):
+    def __init__(self, application_dir, help_html_subpath):
 
         super( GeosurfaceDeformationDialog, self ).__init__() 
-                            
+
+        self.application_dir = application_dir
+        self.help_html_subpath = help_html_subpath
+
         self.setup_gui() 
 
 
@@ -232,15 +235,16 @@ class GeosurfaceDeformationDialog( QDialog ):
         return help_QGroupBox
                   
 
-    def open_html_help( self ):        
+    def open_html_help( self ):
 
-        webbrowser.open('./help/help.html', new = True )
+        help_file_path = os.path.join(self.application_dir, self.help_html_subpath)
+        webbrowser.open(help_file_path, new=True)
       
 
     def select_input_file( self ):
             
         short_txt = "*.json"
-        long_txt = "json (*.json *.JSON)"            
+        long_txt = "Gas (*.json *.JSON)"
                                  
         input_filename = QFileDialog.getOpenFileName(self, 
                                                       self.tr( "Open file: " ), 
@@ -929,11 +933,23 @@ class GeosurfaceVertShearDialog( QDialog ):
 def main():
     """
     Main of the module.
-    """    
-    app = QApplication(sys.argv)    
-    form = GeosurfaceDeformationDialog()
+    """
+
+    help_folder = 'help'
+    help_file_name = 'help.html'
+
+    ##
+
+    help_file_subpath = os.path.join(help_folder, help_file_name)
+    appl_dir = os.path.dirname(os.path.realpath(__file__))
+
+    app = QApplication(sys.argv)
+    form = GeosurfaceDeformationDialog(appl_dir, help_file_subpath)
     form.show()
     app.exec_()
+
+
+
 
 
 main()       
