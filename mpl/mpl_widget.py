@@ -9,13 +9,11 @@ from __future__  import division
 
 import numpy as np
 
-from PyQt5.QtCore import *
-from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 
 
 from matplotlib import cm, rcParams
-#import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt
 from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
 #from matplotlib.backends.backend_qt4agg import NavigationToolbar2QTAgg as NavigationToolbar
 from matplotlib.backends.backend_qt4agg import NavigationToolbar2QT as NavigationToolbar
@@ -25,13 +23,12 @@ from mpl_toolkits.mplot3d import Axes3D
 from .utils import valid_intervals
 
        
-
 class MplCanvas(FigureCanvas):
     """
     Class to represent the FigureCanvas widget.
     """
     
-    def __init__( self ): 
+    def __init__(self): 
        
         self.set_rcParams()    
          
@@ -55,30 +52,30 @@ class MplCanvas(FigureCanvas):
         rcParams["figure.facecolor"] = 'white' 
        
         
-class MplWidget( QWidget ):
+class MplWidget(QWidget):
     
-    def __init__(self, window_title = 'Profile', parent = None):
+    def __init__(self, window_title='Profile', parent=None):
         
         # initialization of Qt MainWindow widget
         QWidget.__init__(self)
-        self.setWindowTitle ( window_title )
+        self.setWindowTitle (window_title)
 
         # set the canvas and the navigation toolbar
-        self.canvas = MplCanvas( )
+        self.canvas = MplCanvas()
         self.ntb = NavigationToolbar(self.canvas, self) 
 
         inputWidget = QWidget() 
         inputLayout = QHBoxLayout() 
-        inputLayout.addWidget( QLabel( self.tr("Set profile colors") ) )        
+        inputLayout.addWidget(QLabel(self.tr("Set profile colors")))        
         inputWidget.setLayout(inputLayout) 
         
         # manage the navigation toolbar
         self.window_tabs = QTabWidget()
         self.window_tabs.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Fixed)        
-        self.window_tabs.addTab( self.ntb, "View" )
+        self.window_tabs.addTab(self.ntb, "View")
         
         #TO BE ADDED IN SUBSEQUENT RELEASE
-        #self.window_tabs.addTab( inputWidget, "Rendering" )         
+        #self.window_tabs.addTab(inputWidget, "Rendering")         
 
         # create a vertical box layout
         self.vbl = QVBoxLayout()       
@@ -93,37 +90,35 @@ class MplWidget( QWidget ):
         self.show()
        
             
-def plot_line( axes, x_list, y_list, linecolor, name='' ):
+def plot_line(axes, x_list, y_list, linecolor, name=''):
     
     if name != '':                       
-        axes.plot( x_list, y_list,'-', color=linecolor, label = unicode(name) )
+        axes.plot(x_list, y_list,'-', color=linecolor, label = unicode(name))
     else:
-        axes.plot( x_list, y_list,'-', color=linecolor )
+        axes.plot(x_list, y_list,'-', color=linecolor)
         
             
-def plot_filled_line( axes, x_list, y_list, plot_y_min, facecolor, alpha = 0.1 ):
+def plot_filled_line(axes, x_list, y_list, plot_y_min, facecolor, alpha = 0.1):
 
-    y_values_array = np.array( y_list )
-    x_values_array = np.array( x_list )
-    for val_int in valid_intervals( y_values_array ):               
-        axes.fill_between( x_values_array[ val_int['start'] : val_int['end']+1 ], 
+    y_values_array = np.array(y_list)
+    x_values_array = np.array(x_list)
+    for val_int in valid_intervals(y_values_array):               
+        axes.fill_between(x_values_array[ val_int['start'] : val_int['end']+1 ], 
                           plot_y_min, 
                           y_values_array[ val_int['start'] : val_int['end']+1 ], 
                           facecolor = facecolor, 
-                          alpha = alpha )
+                          alpha = alpha)
 
   
-def view_3D_surface( surface_3d ):
+def view_3D_surface(surface_3d):
            
     X, Y, Z = surface_3d
         
-    # tripcolor plot.
+    # tricolor plot.
+
     fig = plt.figure()
     ax = fig.add_subplot(1, 1, 1, projection='3d')
-    ax.plot_trisurf( X, Y, Z, cmap=cm.jet, linewidth=0.1 )
+    ax.plot_trisurf(X, Y, Z, cmap=cm.jet, linewidth=0.1)
     ax.autoscale(enable=True, axis='both', tight=True)
     plt.show()
     
-    
-    
-         

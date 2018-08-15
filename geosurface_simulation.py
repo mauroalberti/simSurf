@@ -406,7 +406,6 @@ class GeosurfaceSimulationDialog(QDialog):
         QMessageBox.information(self, 
                                  "Surface simulation", 
                                  "Completed")        
-        
 
     def select_output_file(self):
             
@@ -433,8 +432,7 @@ class GeosurfaceSimulationDialog(QDialog):
         if not output_filename:
             return
 
-        self.output_filename_QLineEdit.setText(output_filename) 
-        
+        self.output_filename_QLineEdit.setText(output_filename[0])
 
     def save_surface(self):
         

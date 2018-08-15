@@ -507,6 +507,24 @@ def geosurface_save_gas(output_filepath, geodata):
     with open(output_filepath, 'w') as outfile:
         json.dump(geodata, outfile)
 
+    return True
+
+
+def geosurface_export_xyz( xyz_file_path, geodata, ):
+
+    geosurface_XYZ, _ = geodata
+    X, Y, Z = geosurface_XYZ
+    assert len(X) == len(Y)
+    assert len(X) == len(Z)
+
+    rec_values_list2 = zip( X, Y, Z )
+
+    with open( xyz_file_path, "w") as ofile:
+        for line in rec_values_list2:
+            ofile.write( ",".join([str(val) for val in line ])+"\n")
+
+    return True
+
 
 def geosurface_read_gas_input(infile_path):
     """
