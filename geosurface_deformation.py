@@ -28,12 +28,11 @@ import sys
 
 import webbrowser
 
-from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 
 from pygsf.spatial.vectorial.meshes import *
-
 from pygsf.spatial.rasters.exceptions import AnaliticSurfaceIOException, AnaliticSurfaceCalcException
+from pygsf.libs_utils.qt.tools import *
  
 from mpl.mpl_widget import view_3D_surface
  
@@ -240,7 +239,7 @@ class GeosurfaceDeformationDialog(QDialog):
         if not input_filename:
             return
 
-        self.input_filename_QLineEdit.setText(input_filename) 
+        self.input_filename_QLineEdit.setText(input_filename[0])
 
     def create_geosurface(self):
         
@@ -269,59 +268,94 @@ class GeosurfaceDeformationDialog(QDialog):
         
     def do_displacement(self):
         
-        if not self.test_input_geosurface("Displacement"):  return
-        
-        self.displacement_window = GeosurfaceDisplacementDialog()       
-        QObject.connect(self.displacement_window, SIGNAL("update_geosurface_for_displacement"), self.update_displacement)
-        self.displacement_window.show()
+        if not self.test_input_geosurface("Displacement"):
+            return
+
+        dialog = GeosurfaceDisplacementDialog()
+
+        if dialog.exec_():
+            self.update_displacement(dialog)
+        else:
+            warn(self,
+                 self.plugin_name,
+                 "No displacement defined")
+            return
 
     def do_rotation(self):
 
-        if not self.test_input_geosurface("Rotation"):  return        
-            
-        self.rotation_window = GeosurfaceRotationDialog(self.anal_geosurface.geosurface_center())       
-        QObject.connect(self.rotation_window, SIGNAL("update_geosurface_for_rotation"), self.update_rotation)
-        self.rotation_window.show()
+        if not self.test_input_geosurface("Rotation"):
+            return
+
+        dialog = GeosurfaceRotationDialog(self.anal_geosurface.geosurface_center())
+
+        if dialog.exec_():
+            self.update_rotation(dialog)
+        else:
+            warn(self,
+                 self.plugin_name,
+                 "No rotation defined")
+            return
 
     def do_scaling(self):
         
-        if not self.test_input_geosurface("Scaling"):  return        
-           
-        self.scaling_window = GeosurfaceScalingDialog(self.anal_geosurface.geosurface_center())       
-        QObject.connect(self.scaling_window, SIGNAL("update_geosurface_for_scaling"), self.update_scaling)
-        self.scaling_window.show()        
+        if not self.test_input_geosurface("Scaling"):
+            return
+
+        dialog = GeosurfaceScalingDialog(self.anal_geosurface.geosurface_center())
+
+        if dialog.exec_():
+            self.update_scaling(dialog)
+        else:
+            warn(self,
+                 self.plugin_name,
+                 "No displacement defined")
+            return
 
     def do_horiz_shear(self):
         
-        if not self.test_input_geosurface("Simple shear (horizontal)"):  return        
-         
-        self.horiz_shear_window = GeosurfaceHorizShearDialog(self.anal_geosurface.geosurface_center())       
-        QObject.connect(self.horiz_shear_window, SIGNAL("update_geosurface_for_horiz_shear"), self.update_horiz_shear)
-        self.horiz_shear_window.show()
+        if not self.test_input_geosurface("Simple shear (horizontal)"):
+            return
+
+        dialog = GeosurfaceHorizShearDialog(self.anal_geosurface.geosurface_center())
+
+        if dialog.exec_():
+            self.update_horiz_shear(dialog)
+        else:
+            warn(self,
+                 self.plugin_name,
+                 "No horizontal shear defined")
+            return
 
     def do_vert_shear(self):
         
-        if not self.test_input_geosurface("Simple shear (vertical)"):  return        
-         
-        self.vert_shear_window = GeosurfaceVertShearDialog(self.anal_geosurface.geosurface_center())       
-        QObject.connect(self.vert_shear_window, SIGNAL("update_geosurface_for_vert_shear"), self.update_vert_shear)
-        self.vert_shear_window.show()
+        if not self.test_input_geosurface("Simple shear (vertical)"):
+            return
 
-    def update_displacement(self):
+        dialog = GeosurfaceVertShearDialog(self.anal_geosurface.geosurface_center())
+
+        if dialog.exec_():
+            self.update_vert_shear(dialog)
+        else:
+            warn(self,
+                 self.plugin_name,
+                 "No vertical shear defined")
+            return
+
+    def update_displacement(self, dialog):
 
         # get displacement values
         try:
-            delta_x = float(self.displacement_window.delta_x_QLineEdit.text())
-            delta_y = float(self.displacement_window.delta_y_QLineEdit.text())
-            delta_z = float(self.displacement_window.delta_z_QLineEdit.text())
+            delta_x = float(dialog.delta_x_QLineEdit.text())
+            delta_y = float(dialog.delta_y_QLineEdit.text())
+            delta_z = float(dialog.delta_z_QLineEdit.text())
         except:
             QMessageBox.critical(self, "Displacement", "Error in input values")
             return             
                 
-        self.deformational_params.append({'type':'displacement', 
-                                           'parameters': {'delta_x' : delta_x, 
-                                                          'delta_y' : delta_y, 
-                                                          'delta_z' : delta_z } })
+        self.deformational_params.append({'type': 'displacement',
+                                           'parameters': {'delta_x': delta_x,
+                                                          'delta_y': delta_y,
+                                                          'delta_z': delta_z } })
 
         try:
             self.create_geosurface()
@@ -330,28 +364,28 @@ class GeosurfaceDeformationDialog(QDialog):
         else:
             QMessageBox.information(self, "Surface displacement", "Done") 
 
-    def update_rotation(self):
+    def update_rotation(self, dialog):
         
         # get rotation values
         try:
-            rot_axis_trend = float(self.rotation_window.axis_trend_QDSpinBox.value())
-            rot_axis_plunge = float(self.rotation_window.axis_plunge_QDSpinBox.value())
-            rot_angle_degr = float(self.rotation_window.rotation_angle_QDSpinBox.value())
+            rot_axis_trend = float(dialog.axis_trend_QDSpinBox.value())
+            rot_axis_plunge = float(dialog.axis_plunge_QDSpinBox.value())
+            rot_angle_degr = float(dialog.rotation_angle_QDSpinBox.value())
             
-            center_x = float(self.rotation_window.axis_center_x_QDSpinBox.value())
-            center_y = float(self.rotation_window.axis_center_y_QDSpinBox.value())            
-            center_z = float(self.rotation_window.axis_center_z_QDSpinBox.value())            
+            center_x = float(dialog.axis_center_x_QDSpinBox.value())
+            center_y = float(dialog.axis_center_y_QDSpinBox.value())
+            center_z = float(dialog.axis_center_z_QDSpinBox.value())
         except:
             QMessageBox.critical(self, "Rotation", "Error in input values")
             return          
         
-        self.deformational_params.append({'type':'rotation', 
-                                       'parameters': {'rotation axis trend' : rot_axis_trend, 
-                                                      'rotation axis plunge' : rot_axis_plunge, 
-                                                      'rotation angle' : rot_angle_degr,
-                                                      'center x': center_x,
-                                                      'center y': center_y,
-                                                      'center z': center_z, } })
+        self.deformational_params.append({'type': 'rotation',
+                                          'parameters': {'rotation axis trend': rot_axis_trend,
+                                                         'rotation axis plunge': rot_axis_plunge,
+                                                         'rotation angle': rot_angle_degr,
+                                                         'center x': center_x,
+                                                         'center y': center_y,
+                                                         'center z': center_z, }})
 
         try:
             self.create_geosurface()
@@ -360,17 +394,17 @@ class GeosurfaceDeformationDialog(QDialog):
         else:
             QMessageBox.information(self, "Surface rotation", "Done") 
 
-    def update_scaling(self):
+    def update_scaling(self, dialog):
         
         # get scaling parameters
         try:
-            scale_factor_x = float(self.scaling_window.scale_x_QLineEdit.text())
-            scale_factor_y = float(self.scaling_window.scale_y_QLineEdit.text())
-            scale_factor_z = float(self.scaling_window.scale_z_QLineEdit.text())
+            scale_factor_x = float(dialog.scale_x_QLineEdit.text())
+            scale_factor_y = float(dialog.scale_y_QLineEdit.text())
+            scale_factor_z = float(dialog.scale_z_QLineEdit.text())
             
-            center_x = float(self.scaling_window.axis_center_x_QDSpinBox.value())
-            center_y = float(self.scaling_window.axis_center_y_QDSpinBox.value())            
-            center_z = float(self.scaling_window.axis_center_z_QDSpinBox.value())    
+            center_x = float(dialog.axis_center_x_QDSpinBox.value())
+            center_y = float(dialog.axis_center_y_QDSpinBox.value())
+            center_z = float(dialog.axis_center_z_QDSpinBox.value())
         except:
             QMessageBox.critical(self, "Scaling", "Error in input values")
             return          
@@ -379,13 +413,13 @@ class GeosurfaceDeformationDialog(QDialog):
             QMessageBox.critical(self, "Scaling", "Input value(s) cannot be zero")
             return
                 
-        self.deformational_params.append({'type':'scaling', 
-                                           'parameters': {'x factor' : scale_factor_x, 
-                                                          'y factor' : scale_factor_y, 
-                                                          'z factor' : scale_factor_z,
-                                                          'center x': center_x,
-                                                          'center y': center_y,
-                                                          'center z': center_z, } })
+        self.deformational_params.append({'type': 'scaling',
+                                          'parameters': {'x factor': scale_factor_x,
+                                                         'y factor': scale_factor_y,
+                                                         'z factor': scale_factor_z,
+                                                         'center x': center_x,
+                                                         'center y': center_y,
+                                                         'center z': center_z, } })
 
         try:
             self.create_geosurface()
@@ -394,26 +428,26 @@ class GeosurfaceDeformationDialog(QDialog):
         else:
             QMessageBox.information(self, "Surface scaling", "Done") 
 
-    def update_horiz_shear(self):
+    def update_horiz_shear(self, dialog):
         
         # get horizontal shear values
         try:
-            psi_angle_degr = float(self.horiz_shear_window.psi_QDSpinBox.value())
-            alpha_angle_degr = float(self.horiz_shear_window.alpha_QDSpinBox.value())
+            psi_angle_degr = float(dialog.psi_QDSpinBox.value())
+            alpha_angle_degr = float(dialog.alpha_QDSpinBox.value())
             
-            center_x = float(self.horiz_shear_window.axis_center_x_QDSpinBox.value())
-            center_y = float(self.horiz_shear_window.axis_center_y_QDSpinBox.value())            
-            center_z = float(self.horiz_shear_window.axis_center_z_QDSpinBox.value())    
+            center_x = float(dialog.axis_center_x_QDSpinBox.value())
+            center_y = float(dialog.axis_center_y_QDSpinBox.value())
+            center_z = float(dialog.axis_center_z_QDSpinBox.value())
         except:
             QMessageBox.critical(self, "Simple shear (horizontal)", "Error in input values")
             return          
         
-        self.deformational_params.append({'type':'simple shear - horizontal', 
-                                           'parameters': {'psi angle (degr.)' : psi_angle_degr, 
-                                                          'alpha angle (degr.)' : alpha_angle_degr,
-                                                          'center x': center_x,
-                                                          'center y': center_y,
-                                                          'center z': center_z, } })
+        self.deformational_params.append({'type': 'simple shear - horizontal',
+                                          'parameters': {'psi angle (degr.)': psi_angle_degr,
+                                                         'alpha angle (degr.)': alpha_angle_degr,
+                                                         'center x': center_x,
+                                                         'center y': center_y,
+                                                         'center z': center_z, }})
 
         try:
             self.create_geosurface()
@@ -422,26 +456,26 @@ class GeosurfaceDeformationDialog(QDialog):
         else:
             QMessageBox.information(self, "Surface simple shear (horiz.)", "Done") 
 
-    def update_vert_shear(self):
+    def update_vert_shear(self, dialog):
         
         # get vertical shear values
         try:
-            psi_angle_degr = float(self.vert_shear_window.psi_QDSpinBox.value())
-            alpha_angle_degr = float(self.vert_shear_window.alpha_QDSpinBox.value())
+            psi_angle_degr = float(dialog.psi_QDSpinBox.value())
+            alpha_angle_degr = float(dialog.alpha_QDSpinBox.value())
             
-            center_x = float(self.vert_shear_window.axis_center_x_QDSpinBox.value())
-            center_y = float(self.vert_shear_window.axis_center_y_QDSpinBox.value())            
-            center_z = float(self.vert_shear_window.axis_center_z_QDSpinBox.value())                
+            center_x = float(dialog.axis_center_x_QDSpinBox.value())
+            center_y = float(dialog.axis_center_y_QDSpinBox.value())
+            center_z = float(dialog.axis_center_z_QDSpinBox.value())
         except:
             QMessageBox.critical(self, "Simple shear (vertical)", "Error in input values")
             return          
         
-        self.deformational_params.append({'type':'simple shear - vertical', 
-                                           'parameters': {'psi angle (degr.)' : psi_angle_degr, 
-                                                          'alpha angle (degr.)' : alpha_angle_degr,
-                                                          'center x': center_x,
-                                                          'center y': center_y,
-                                                          'center z': center_z, } })
+        self.deformational_params.append({'type': 'simple shear - vertical',
+                                          'parameters': {'psi angle (degr.)': psi_angle_degr,
+                                                         'alpha angle (degr.)': alpha_angle_degr,
+                                                         'center x': center_x,
+                                                         'center y': center_y,
+                                                         'center z': center_z, }})
         try:
             self.create_geosurface()
         except AnaliticSurfaceCalcException as msg:
@@ -487,7 +521,7 @@ class GeosurfaceDeformationDialog(QDialog):
                                                       short_txt, 
                                                       long_txt)        
         if output_filename:
-            self.simulation_outputfilename_QLineEdit.setText(output_filename)  
+            self.simulation_outputfilename_QLineEdit.setText(output_filename[0])
 
     def save_surface(self):
         
@@ -540,20 +574,24 @@ class GeosurfaceDisplacementDialog(QDialog):
         self.delta_z_QLineEdit = QLineEdit()
         displLayout.addWidget(self.delta_z_QLineEdit, 2, 1, 1, 1)          
 
-        done_QPushButton = QPushButton("Apply")
-        done_QPushButton.clicked[bool].connect(self.displacement_done) 
-        done_QPushButton.setEnabled(True) 
-              
-        displLayout.addWidget(done_QPushButton, 3, 0, 1, 2)
-                                                                         
+        # ok/cancel section
+
+        okButton = QPushButton("&OK")
+        cancelButton = QPushButton("Cancel")
+
+        buttonLayout = QHBoxLayout()
+        buttonLayout.addStretch()
+        buttonLayout.addWidget(okButton)
+        buttonLayout.addWidget(cancelButton)
+
+        displLayout.addLayout(buttonLayout, 3, 0, 1, 2)
+
+        okButton.clicked.connect(self.accept)
+        cancelButton.clicked.connect(self.reject)
+
         self.setLayout(displLayout)         
         self.adjustSize()                       
         self.setWindowTitle('Displacement') 
-
-    def displacement_done(self, dummy_var):        
-
-        self.emit(SIGNAL("update_geosurface_for_displacement"))                       
-        self.close()
 
 
 class GeosurfaceRotationDialog(QDialog):
@@ -564,73 +602,80 @@ class GeosurfaceRotationDialog(QDialog):
   
         self.geosurface_center = geosurface_center
         
-        displLayout = QGridLayout()  
+        rotationLayout = QGridLayout()
                                        
-        displLayout.addWidget(QLabel("Rotation axis and angle"), 0, 0, 1, 3)             
+        rotationLayout.addWidget(QLabel("Rotation axis and angle"), 0, 0, 1, 3)
         
-        displLayout.addWidget(QLabel("trend"), 1, 0, 1, 1)  
+        rotationLayout.addWidget(QLabel("trend"), 1, 0, 1, 1)
                    
         self.axis_trend_QDSpinBox = QDoubleSpinBox()
         self.axis_trend_QDSpinBox.setMaximum(360.0)
         self.axis_trend_QDSpinBox.setSingleStep(0.1)        
-        displLayout.addWidget(self.axis_trend_QDSpinBox, 1, 1, 1, 1)
+        rotationLayout.addWidget(self.axis_trend_QDSpinBox, 1, 1, 1, 1)
 
-        displLayout.addWidget(QLabel("plunge"), 1, 2, 1, 1)   
+        rotationLayout.addWidget(QLabel("plunge"), 1, 2, 1, 1)
                   
         self.axis_plunge_QDSpinBox = QDoubleSpinBox()
         self.axis_plunge_QDSpinBox.setMinimum(-90.0)
         self.axis_plunge_QDSpinBox.setMaximum(90.0)
         self.axis_plunge_QDSpinBox.setSingleStep(0.1)        
-        displLayout.addWidget(self.axis_plunge_QDSpinBox, 1, 3, 1, 1)                
+        rotationLayout.addWidget(self.axis_plunge_QDSpinBox, 1, 3, 1, 1)
 
-        displLayout.addWidget(QLabel("angle"), 1, 4, 1, 1)  
+        rotationLayout.addWidget(QLabel("angle"), 1, 4, 1, 1)
                   
         self.rotation_angle_QDSpinBox = QDoubleSpinBox()
         self.rotation_angle_QDSpinBox.setMinimum(-360.0)
         self.rotation_angle_QDSpinBox.setMaximum(360.0)
         self.rotation_angle_QDSpinBox.setSingleStep(0.1)        
-        displLayout.addWidget(self.rotation_angle_QDSpinBox, 1, 5, 1, 1)          
+        rotationLayout.addWidget(self.rotation_angle_QDSpinBox, 1, 5, 1, 1)
 
-                  
-        displLayout.addWidget(QLabel("Rotation center"), 2, 0, 1, 2)                  
+        rotationLayout.addWidget(QLabel("Rotation center"), 2, 0, 1, 2)
  
-        displLayout.addWidget(QLabel("x"), 3, 0, 1, 1) 
-
+        rotationLayout.addWidget(QLabel("x"), 3, 0, 1, 1)
 
         range_extreme = 9999999999 
         self.axis_center_x_QDSpinBox = QDoubleSpinBox()
         self.axis_center_x_QDSpinBox.setRange(-range_extreme, range_extreme)
         self.axis_center_x_QDSpinBox.setSingleStep(0.1)        
-        displLayout.addWidget(self.axis_center_x_QDSpinBox, 3, 1, 1, 1)         
+        rotationLayout.addWidget(self.axis_center_x_QDSpinBox, 3, 1, 1, 1)
 
-        displLayout.addWidget(QLabel("y"), 3, 2, 1, 1) 
+        rotationLayout.addWidget(QLabel("y"), 3, 2, 1, 1)
 
         self.axis_center_y_QDSpinBox = QDoubleSpinBox()
         self.axis_center_y_QDSpinBox.setRange(-range_extreme, range_extreme)
         self.axis_center_y_QDSpinBox.setSingleStep(0.1)        
-        displLayout.addWidget(self.axis_center_y_QDSpinBox, 3, 3, 1, 1)   
+        rotationLayout.addWidget(self.axis_center_y_QDSpinBox, 3, 3, 1, 1)
         
-        displLayout.addWidget(QLabel("z"), 3, 4, 1, 1) 
+        rotationLayout.addWidget(QLabel("z"), 3, 4, 1, 1)
 
         self.axis_center_z_QDSpinBox = QDoubleSpinBox()
         self.axis_center_z_QDSpinBox.setRange(-range_extreme, range_extreme)
         self.axis_center_z_QDSpinBox.setSingleStep(0.1)        
-        displLayout.addWidget(self.axis_center_z_QDSpinBox, 3, 5, 1, 1)   
+        rotationLayout.addWidget(self.axis_center_z_QDSpinBox, 3, 5, 1, 1)
                                       
         self.axis_center_choice_QCheckBox = QCheckBox("fix rotation center to geosurface center")
         self.axis_center_choice_QCheckBox.setChecked(True) 
         self.axis_center_choice_QCheckBox.stateChanged.connect(self.set_center_values)
-        displLayout.addWidget(self.axis_center_choice_QCheckBox, 4, 0, 1, 4)                             
+        rotationLayout.addWidget(self.axis_center_choice_QCheckBox, 4, 0, 1, 4)
 
         self.set_center_values()
-            
-            
-        done_QPushButton = QPushButton("Apply")
-        done_QPushButton.clicked[bool].connect(self.rotation_done) 
-        done_QPushButton.setEnabled(True)               
-        displLayout.addWidget(done_QPushButton, 5, 0, 1, 6)
-                                                                         
-        self.setLayout(displLayout)         
+
+        # ok/cancel section
+
+        okButton = QPushButton("&OK")
+        cancelButton = QPushButton("Cancel")
+
+        buttonLayout = QHBoxLayout()
+        buttonLayout.addStretch()
+        buttonLayout.addWidget(okButton)
+        buttonLayout.addWidget(cancelButton)
+
+        rotationLayout.addLayout(buttonLayout, 5, 0, 1, 6)
+
+        okButton.clicked.connect(self.accept)
+        cancelButton.clicked.connect(self.reject)
+
+        self.setLayout(rotationLayout)
         self.adjustSize()                       
         self.setWindowTitle('Rotation') 
 
@@ -641,11 +686,6 @@ class GeosurfaceRotationDialog(QDialog):
             self.axis_center_y_QDSpinBox.setValue(self.geosurface_center[1])        
             self.axis_center_z_QDSpinBox.setValue(self.geosurface_center[2])
 
-    def rotation_done(self, dummy_var):        
-
-        self.emit(SIGNAL("update_geosurface_for_rotation"))                       
-        self.close()
-   
 
 class GeosurfaceScalingDialog(QDialog):
 
@@ -671,11 +711,9 @@ class GeosurfaceScalingDialog(QDialog):
         self.scale_z_QLineEdit = QLineEdit()
         scalingLayout.addWidget(self.scale_z_QLineEdit, 1, 5, 1, 1)          
 
-                  
         scalingLayout.addWidget(QLabel("Scaling center"), 2, 0, 1, 2)                  
  
         scalingLayout.addWidget(QLabel("x"), 3, 0, 1, 1) 
-
 
         range_extreme = 9999999999 
         self.axis_center_x_QDSpinBox = QDoubleSpinBox()
@@ -704,13 +742,21 @@ class GeosurfaceScalingDialog(QDialog):
 
         self.set_center_values()
 
+        # ok/cancel section
 
-        done_QPushButton = QPushButton("Apply")
-        done_QPushButton.clicked[bool].connect(self.scaling_done) 
-        done_QPushButton.setEnabled(True) 
-              
-        scalingLayout.addWidget(done_QPushButton, 5, 0, 1, 6)
-                                                                         
+        okButton = QPushButton("&OK")
+        cancelButton = QPushButton("Cancel")
+
+        buttonLayout = QHBoxLayout()
+        buttonLayout.addStretch()
+        buttonLayout.addWidget(okButton)
+        buttonLayout.addWidget(cancelButton)
+
+        scalingLayout.addLayout(buttonLayout, 5, 0, 1, 6)
+
+        okButton.clicked.connect(self.accept)
+        cancelButton.clicked.connect(self.reject)
+
         self.setLayout(scalingLayout)         
         self.adjustSize()                       
         self.setWindowTitle('Scaling') 
@@ -722,11 +768,6 @@ class GeosurfaceScalingDialog(QDialog):
             self.axis_center_y_QDSpinBox.setValue(self.geosurface_center[1])        
             self.axis_center_z_QDSpinBox.setValue(self.geosurface_center[2])
 
-    def scaling_done(self, dummy_var):        
-
-        self.emit(SIGNAL("update_geosurface_for_scaling"))                       
-        self.close()
-
 
 class GeosurfaceHorizShearDialog(QDialog):
      
@@ -736,62 +777,69 @@ class GeosurfaceHorizShearDialog(QDialog):
  
         self.geosurface_center = geosurface_center
          
-        simpleshear_horizLayout = QGridLayout()                            
+        horizsimpleshearLayout = QGridLayout()
                     
-        simpleshear_horizLayout.addWidget(QLabel("Psi"), 0, 0, 1, 1)  
+        horizsimpleshearLayout.addWidget(QLabel("Psi"), 0, 0, 1, 1)
 
         self.psi_QDSpinBox = QDoubleSpinBox()
         self.psi_QDSpinBox.setRange(0.0, 89.9)
         self.psi_QDSpinBox.setSingleStep(0.1)        
-        simpleshear_horizLayout.addWidget(self.psi_QDSpinBox, 0, 1, 1, 1)
+        horizsimpleshearLayout.addWidget(self.psi_QDSpinBox, 0, 1, 1, 1)
 
-        simpleshear_horizLayout.addWidget(QLabel("Alpha"), 0, 2, 1, 1)  
+        horizsimpleshearLayout.addWidget(QLabel("Alpha"), 0, 2, 1, 1)
         
         self.alpha_QDSpinBox = QDoubleSpinBox()
         self.alpha_QDSpinBox.setRange(0.0, 359.9)
         self.alpha_QDSpinBox.setSingleStep(0.1)             
-        simpleshear_horizLayout.addWidget(self.alpha_QDSpinBox, 0, 3, 1, 1)
-               
-                  
-        simpleshear_horizLayout.addWidget(QLabel("Shear axis center"), 1, 0, 1, 2)                  
- 
-        simpleshear_horizLayout.addWidget(QLabel("x"), 2, 0, 1, 1) 
+        horizsimpleshearLayout.addWidget(self.alpha_QDSpinBox, 0, 3, 1, 1)
 
+        horizsimpleshearLayout.addWidget(QLabel("Shear axis center"), 1, 0, 1, 2)
+ 
+        horizsimpleshearLayout.addWidget(QLabel("x"), 2, 0, 1, 1)
 
         range_extreme = 9999999999 
         self.axis_center_x_QDSpinBox = QDoubleSpinBox()
         self.axis_center_x_QDSpinBox.setRange(-range_extreme, range_extreme)
         self.axis_center_x_QDSpinBox.setSingleStep(0.1)        
-        simpleshear_horizLayout.addWidget(self.axis_center_x_QDSpinBox, 2, 1, 1, 1)         
+        horizsimpleshearLayout.addWidget(self.axis_center_x_QDSpinBox, 2, 1, 1, 1)
 
-        simpleshear_horizLayout.addWidget(QLabel("y"), 2, 2, 1, 1) 
+        horizsimpleshearLayout.addWidget(QLabel("y"), 2, 2, 1, 1)
 
         self.axis_center_y_QDSpinBox = QDoubleSpinBox()
         self.axis_center_y_QDSpinBox.setRange(-range_extreme, range_extreme)
         self.axis_center_y_QDSpinBox.setSingleStep(0.1)        
-        simpleshear_horizLayout.addWidget(self.axis_center_y_QDSpinBox, 2, 3, 1, 1)   
+        horizsimpleshearLayout.addWidget(self.axis_center_y_QDSpinBox, 2, 3, 1, 1)
         
-        simpleshear_horizLayout.addWidget(QLabel("z"), 2, 4, 1, 1) 
+        horizsimpleshearLayout.addWidget(QLabel("z"), 2, 4, 1, 1)
 
         self.axis_center_z_QDSpinBox = QDoubleSpinBox()
         self.axis_center_z_QDSpinBox.setRange(-range_extreme, range_extreme)
         self.axis_center_z_QDSpinBox.setSingleStep(0.1)        
-        simpleshear_horizLayout.addWidget(self.axis_center_z_QDSpinBox, 2, 5, 1, 1)   
+        horizsimpleshearLayout.addWidget(self.axis_center_z_QDSpinBox, 2, 5, 1, 1)
                                       
         self.axis_center_choice_QCheckBox = QCheckBox("fix shear axis center to geosurface center")
         self.axis_center_choice_QCheckBox.setChecked(True) 
         self.axis_center_choice_QCheckBox.stateChanged.connect(self.set_center_values)
-        simpleshear_horizLayout.addWidget(self.axis_center_choice_QCheckBox, 3, 0, 1, 4)                             
+        horizsimpleshearLayout.addWidget(self.axis_center_choice_QCheckBox, 3, 0, 1, 4)
 
         self.set_center_values()
 
-        done_QPushButton = QPushButton("Apply")
-        done_QPushButton.clicked[bool].connect(self.horiz_shear_done) 
-        done_QPushButton.setEnabled(True) 
-              
-        simpleshear_horizLayout.addWidget(done_QPushButton, 4, 0, 1, 6)
-                                                                         
-        self.setLayout(simpleshear_horizLayout)         
+        # ok/cancel section
+
+        okButton = QPushButton("&OK")
+        cancelButton = QPushButton("Cancel")
+
+        buttonLayout = QHBoxLayout()
+        buttonLayout.addStretch()
+        buttonLayout.addWidget(okButton)
+        buttonLayout.addWidget(cancelButton)
+
+        horizsimpleshearLayout.addLayout(buttonLayout, 4, 0, 1, 6)
+
+        okButton.clicked.connect(self.accept)
+        cancelButton.clicked.connect(self.reject)
+
+        self.setLayout(horizsimpleshearLayout)
         self.adjustSize()                       
         self.setWindowTitle('Horizontal simple shear') 
 
@@ -802,11 +850,6 @@ class GeosurfaceHorizShearDialog(QDialog):
             self.axis_center_y_QDSpinBox.setValue(self.geosurface_center[1])        
             self.axis_center_z_QDSpinBox.setValue(self.geosurface_center[2])
 
-    def horiz_shear_done(self, dummy_var):        
-
-        self.emit(SIGNAL("update_geosurface_for_horiz_shear"))                       
-        self.close()
-        
              
 class GeosurfaceVertShearDialog(QDialog):
      
@@ -816,60 +859,68 @@ class GeosurfaceVertShearDialog(QDialog):
  
         self.geosurface_center = geosurface_center
          
-        simpleshear_vertLayout = QGridLayout()                            
+        vertsimpleshearLayout = QGridLayout()
                     
-        simpleshear_vertLayout.addWidget(QLabel("Psi"), 0, 0, 1, 1) 
+        vertsimpleshearLayout.addWidget(QLabel("Psi"), 0, 0, 1, 1)
                     
         self.psi_QDSpinBox = QDoubleSpinBox()
         self.psi_QDSpinBox.setRange(0.0, 89.9)
         self.psi_QDSpinBox.setSingleStep(0.1)  
-        simpleshear_vertLayout.addWidget(self.psi_QDSpinBox, 0, 1, 1, 1)
+        vertsimpleshearLayout.addWidget(self.psi_QDSpinBox, 0, 1, 1, 1)
 
-        simpleshear_vertLayout.addWidget(QLabel("Alpha"), 0, 2, 1, 1)             
+        vertsimpleshearLayout.addWidget(QLabel("Alpha"), 0, 2, 1, 1)
         self.alpha_QDSpinBox = QDoubleSpinBox()
         self.alpha_QDSpinBox.setRange(0.0, 359.9)
         self.alpha_QDSpinBox.setSingleStep(0.1)  
-        simpleshear_vertLayout.addWidget(self.alpha_QDSpinBox, 0, 3, 1, 1)
-        
-                  
-        simpleshear_vertLayout.addWidget(QLabel("Shear axis center"), 1, 0, 1, 2)                  
+        vertsimpleshearLayout.addWidget(self.alpha_QDSpinBox, 0, 3, 1, 1)
+
+        vertsimpleshearLayout.addWidget(QLabel("Shear axis center"), 1, 0, 1, 2)
  
-        simpleshear_vertLayout.addWidget(QLabel("x"), 2, 0, 1, 1) 
+        vertsimpleshearLayout.addWidget(QLabel("x"), 2, 0, 1, 1)
 
         range_extreme = 9999999999 
         self.axis_center_x_QDSpinBox = QDoubleSpinBox()
         self.axis_center_x_QDSpinBox.setRange(-range_extreme, range_extreme)
         self.axis_center_x_QDSpinBox.setSingleStep(0.1)        
-        simpleshear_vertLayout.addWidget(self.axis_center_x_QDSpinBox, 2, 1, 1, 1)         
+        vertsimpleshearLayout.addWidget(self.axis_center_x_QDSpinBox, 2, 1, 1, 1)
 
-        simpleshear_vertLayout.addWidget(QLabel("y"), 2, 2, 1, 1) 
+        vertsimpleshearLayout.addWidget(QLabel("y"), 2, 2, 1, 1)
 
         self.axis_center_y_QDSpinBox = QDoubleSpinBox()
         self.axis_center_y_QDSpinBox.setRange(-range_extreme, range_extreme)
         self.axis_center_y_QDSpinBox.setSingleStep(0.1)        
-        simpleshear_vertLayout.addWidget(self.axis_center_y_QDSpinBox, 2, 3, 1, 1)   
+        vertsimpleshearLayout.addWidget(self.axis_center_y_QDSpinBox, 2, 3, 1, 1)
         
-        simpleshear_vertLayout.addWidget(QLabel("z"), 2, 4, 1, 1) 
+        vertsimpleshearLayout.addWidget(QLabel("z"), 2, 4, 1, 1)
 
         self.axis_center_z_QDSpinBox = QDoubleSpinBox()
         self.axis_center_z_QDSpinBox.setRange(-range_extreme, range_extreme)
         self.axis_center_z_QDSpinBox.setSingleStep(0.1)        
-        simpleshear_vertLayout.addWidget(self.axis_center_z_QDSpinBox, 2, 5, 1, 1)   
+        vertsimpleshearLayout.addWidget(self.axis_center_z_QDSpinBox, 2, 5, 1, 1)
                                       
         self.axis_center_choice_QCheckBox = QCheckBox("fix shear axis center to geosurface center")
         self.axis_center_choice_QCheckBox.setChecked(True) 
         self.axis_center_choice_QCheckBox.stateChanged.connect(self.set_center_values)
-        simpleshear_vertLayout.addWidget(self.axis_center_choice_QCheckBox, 3, 0, 1, 4)                             
+        vertsimpleshearLayout.addWidget(self.axis_center_choice_QCheckBox, 3, 0, 1, 4)
 
         self.set_center_values()
 
-        done_QPushButton = QPushButton("Apply")
-        done_QPushButton.clicked[bool].connect(self.vert_shear_done) 
-        done_QPushButton.setEnabled(True) 
-              
-        simpleshear_vertLayout.addWidget(done_QPushButton, 4, 0, 1, 6)
-                                                                         
-        self.setLayout(simpleshear_vertLayout)         
+        # ok/cancel section
+
+        okButton = QPushButton("&OK")
+        cancelButton = QPushButton("Cancel")
+
+        buttonLayout = QHBoxLayout()
+        buttonLayout.addStretch()
+        buttonLayout.addWidget(okButton)
+        buttonLayout.addWidget(cancelButton)
+
+        vertsimpleshearLayout.addLayout(buttonLayout, 4, 0, 1, 6)
+
+        okButton.clicked.connect(self.accept)
+        cancelButton.clicked.connect(self.reject)
+
+        self.setLayout(vertsimpleshearLayout)
         self.adjustSize()                       
         self.setWindowTitle('Vertical simple shear') 
 
@@ -879,11 +930,6 @@ class GeosurfaceVertShearDialog(QDialog):
             self.axis_center_x_QDSpinBox.setValue(self.geosurface_center[0]) 
             self.axis_center_y_QDSpinBox.setValue(self.geosurface_center[1])        
             self.axis_center_z_QDSpinBox.setValue(self.geosurface_center[2])
-
-    def vert_shear_done(self, dummy_var):
-
-        self.emit(SIGNAL("update_geosurface_for_vert_shear"))                       
-        self.close()
 
 
 if __name__ == "__main__":
