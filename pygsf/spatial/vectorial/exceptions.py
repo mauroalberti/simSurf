@@ -31,3 +31,9 @@ class AnaliticSurfaceCalcException(Exception):
     """
 
     pass
+
+
+class VectorIOException(Exception):
+
+    pass
+

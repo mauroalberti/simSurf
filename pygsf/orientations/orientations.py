@@ -1662,6 +1662,53 @@ class Plane(object):
         d = - (a * point.x + b * point.y + c * point.z)
         return CPlane(a, b, c, d)
 
+    def slope_x_dir(self) -> float:
+        """
+        Calculate the slope of a given plane along the x direction.
+        The plane orientation  is expressed following the geological convention.
+
+        :return: the slope along the x direction
+        :rtype: float.
+
+        Example:
+        """
+        return - sin(radians(self.dd)) * tan(radians(self.da))
+
+    def slope_y_dir(self) -> float:
+        """
+        Calculate the slope of a given plane along the y direction.
+        The plane orientation  is expressed following the geological convention.
+
+        :return: the slope along the y direction
+        :rtype: float.
+
+        Example:
+        """
+        return - cos(radians(self.dd)) * tan(radians(self.da))
+
+    def closure_plane_from_geo(self, src_pt: Point) -> Callable:
+        """
+        Closure that embodies the analytical formula for a given, non-vertical plane.
+        This closure is used to calculate the z value from given horizontal coordinates (x, y).
+
+        :param src_pt: Point_3D instance expressing a location point contained by the plane.
+        :type src_pt: Point_3D.
+
+        :return: lambda (closure) expressing an analytical formula for deriving z given x and y values.
+        """
+
+        x0 = src_pt.x
+        y0 = src_pt.y
+        z0 = src_pt.z
+
+        # slope of the line parallel to the x axis and contained by the plane
+        a = self.slope_x_dir()
+
+        # slope of the line parallel to the y axis and contained by the plane
+        b = self.slope_y_dir()
+
+        return lambda x, y: a * (x - x0) + b * (y - y0) + z0
+
 
 if __name__ == "__main__":
 

@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 
 
-from typing import List, Tuple
+from typing import List, Tuple, Dict
 
-from PyQt5.QtGui import QColor
-from PyQt5.QtWidgets import QComboBox, QMessageBox
+from PyQt5.QtGui import QIcon, QColor
+from PyQt5.QtWidgets import QAction, QComboBox, QMessageBox
 
 
 def info(parent, header, msg):
@@ -45,8 +45,42 @@ def error(parent, header, msg):
 
     QMessageBox.error(parent, header, msg)
     
-    
-def update_ComboBox(combobox: QComboBox, init_text: str, texts: List[str]):
+def make_qaction(tool_params: Dict, plugin_nm: str, icon_fldr: str, parent: 'QObject'):
+    """
+    Creates a QAction instance.
+    Expected keys in params dictionary:
+        tool_nm: the tool name, string;
+        icon_nm: the name of the icon, string;
+        whtsths_dscr: the action description, string.
+    Used for QGIS Python plugin.
+
+    :param tool_params: QAction text parameters.
+    :type tool_params: dictionary.
+    :param plugin_nm: name of the plugin.
+    :type plugin_nm: str.
+    :param icon_fldr: icon folder name (assume single nesting).
+    :type icon_fldr: str.
+    :param parent: the parent widget.
+    :type parent: QObject or null pointer.
+    :return:
+    """
+
+    q_icon_path = ":/plugins/{}/{}/{}".format(
+            plugin_nm,
+            icon_fldr,
+            tool_params["icon_nm"])
+
+    geoproc = QAction(
+        QIcon(q_icon_path),
+        tool_params["tool_nm"],
+        parent)
+
+    geoproc.setWhatsThis(tool_params["whtsths_dscr"])
+
+    return geoproc
+
+
+def update_combo_box(combobox: QComboBox, init_text: str, texts: List[str]):
     """
     Updates a combo box content using a list of strings.
 

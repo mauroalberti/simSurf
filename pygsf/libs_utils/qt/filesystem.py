@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
 
-from PyQt5.QtCore import *
-from PyQt5.QtWidgets import *
+from PyQt5.QtCore import QSettings, QFileInfo
+from PyQt5.QtWidgets import QFileDialog
 
 
 def lastUsedDir(module_nm):
@@ -59,7 +59,7 @@ def update_directory_key(settings: QSettings, settings_dir_key, fileName):
                       str(path))
 
 
-def new_file_path(parent, show_msg, path, filter_text):
+def define_path_new_file(parent, show_msg, path, filter_text):
     """
     Defines the path of a new file.
 
@@ -70,7 +70,7 @@ def new_file_path(parent, show_msg, path, filter_text):
     :return:
     """
 
-    output_filename = QFileDialog.getSaveFileName(parent,
+    output_filename, _ = QFileDialog.getSaveFileName(parent,
                                                   show_msg,
                                                   path,
                                                   filter_text)
@@ -91,7 +91,7 @@ def old_file_path(parent, show_msg, filter_extension, filter_text):
     :return:
     """
 
-    input_filename = QFileDialog.getOpenFileName(parent,
+    input_filename, _ = QFileDialog.getOpenFileName(parent,
                                                  parent.tr(show_msg),
                                                  filter_extension,
                                                  filter_text)
@@ -99,4 +99,5 @@ def old_file_path(parent, show_msg, filter_extension, filter_text):
         return ''
     else:
         return input_filename
+
 

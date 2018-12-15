@@ -5,11 +5,11 @@ from .scalars import *
 from .interpolations import interp_bilinear as s_interp_bilinear, interp_linear
 
 
-
 def arrToTuple(arr1D: 'array[Number]') -> Tuple[float, ...]:
     """
+    Converts a 1D arrays into a tuple of floats.
+    It assumes a 1D array as input.
     Modified from: https://stackoverflow.com/questions/10016352/convert-numpy-array-to-tuple
-    Works just for 1D arrays
 
     :param arr1D: the 1D-arrays whose components have to be extracted.
     :type arr1D: numpy array.
@@ -29,8 +29,8 @@ def toFloats(iterable_obj: Sequence[Number]) -> List[float]:
     """
     Converts an iterable object storing float-compatible values to a list of floats.
 
-    :param iterable_obj:
-    :type iterable_obj:
+    :param iterable_obj: iterable object storing float-compatible values
+    :type iterable_obj: iterable storing float-compatible values
     :return:
     :rtype: list of Floats.
 
@@ -204,6 +204,27 @@ def xyzSvd(xyz_array) -> dict:
         result = None
 
     return dict(result=result)
+
+
+def svd(xyz_array) -> Optional[Tuple['np.array', 'np.array', 'np.array']]:
+    """
+    Calculates the SVD solution given a Numpy array.
+
+    # modified after:
+    # http://stackoverflow.com/questions/15959411/best-fit-plane-algorithms-why-different-results-solved
+
+    :param xyz_array:
+    :type xyz_array: numpy array.
+    :return:
+    :rtype:
+
+    Examples:
+    """
+
+    try:
+        return np.linalg.svd(xyz_array)
+    except:
+        return None
 
 
 if __name__ == "__main__":

@@ -42,8 +42,8 @@ def try_write_esrigrid(geoarray: GeoArray, outgrid_fn: str, esri_nullvalue: Numb
     if geoarray.has_rotation:
         return False, "Grid has axes rotations defined"
 
-    cell_size_x = geoarray.cellsize_x
-    cell_size_y = geoarray.cellsize_y
+    cell_size_x = geoarray.src_cellsize_j
+    cell_size_y = geoarray.src_cellsize_i
 
     if not areClose(cell_size_x, cell_size_y):
         return False, "Cell sizes in the x- and y- directions are not similar"

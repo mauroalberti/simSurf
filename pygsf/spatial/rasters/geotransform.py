@@ -286,7 +286,7 @@ def xyGeogrToijPix(geotransform: GeoTransform, x: Number, y: Number) -> Tuple[fl
     return row, col
 
 
-def gtToxyCellCenters(gt: GeoTransform, num_rows: int, num_cols: int) -> Tuple['array', 'array']:
+def gtToxyCellCenters(gt: GeoTransform, num_rows: int, num_cols: int) -> Tuple[np.ndarray, np.ndarray]:
     """
     Create two arrays that represent the X and Y geographic coordinates of
     the cells CENTERS (not corners) given the geotransform.

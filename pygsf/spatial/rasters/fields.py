@@ -41,7 +41,7 @@ def array_from_function(
         row_num: int,
         col_num: int,
         geotransform: GeoTransform,
-        z_transfer_func: Callable) -> 'array':
+        z_transfer_func: Callable) -> np.ndarray:
     """
     Creates an array of z values based on functions that map (i,j) indices (to be created)
     into (x, y) values and then z values.
@@ -53,10 +53,10 @@ def array_from_function(
     :param  geotransform:  the used geotransform.
     :type  geotransform:  GeoTransform.
     :param  z_transfer_func:  function that derives z given a (x, y) point.
-    :type  z_transfer_func:  Function.
+    :type  z_transfer_func:  Callable.
 
     :return:  array of z values
-    :rtype: np.array of float numbers.
+    :rtype: np.ndarray of float numbers.
 
     Examples:
     """
@@ -69,17 +69,17 @@ def array_from_function(
         z_transfer_func=z_transfer_func)
 
 
-def grad_x(
-        fld: 'array',
-        cell_size_x: Number,
-        edge_order: int=2) -> 'array':
+def grad_j(
+        fld: np.ndarray,
+        cell_size_j: Number,
+        edge_order: int=2) -> np.ndarray:
     """
-    Calculates the array gradient along the x axis.
+    Calculates the array gradient along the j axis.
 
     :param fld: array.
     :type fld: np.array.
-    :param cell_size_x: the cell spacing in the x direction.
-    :type cell_size_x: Number.
+    :param cell_size_j: the cell spacing in the x direction.
+    :type cell_size_j: Number.
     :param edge_order: the type of edge order used in the Numpy gradient method.
     :type edge_order: int.
     :return: gradient field.
@@ -88,20 +88,20 @@ def grad_x(
     Examples:
     """
 
-    return np.gradient(fld, edge_order=edge_order, axis=1) / cell_size_x
+    return np.gradient(fld, edge_order=edge_order, axis=1) / cell_size_j
 
 
-def grad_y(
-        fld: 'array',
-        cell_size_y: Number,
-        edge_order: int=2) -> 'array':
+def grad_i(
+        fld: np.ndarray,
+        cell_size_i: Number,
+        edge_order: int=2) -> np.ndarray:
     """
-    Calculates the array gradient along the y axis.
+    Calculates the array gradient along the i axis.
 
     :param fld: array.
     :type fld: np.array.
-    :param cell_size_y: the cell spacing in the y direction.
-    :type cell_size_y: Number.
+    :param cell_size_i: the cell spacing in the y direction.
+    :type cell_size_i: Number.
     :param edge_order: the type of edge order used in the Numpy gradient method.
     :type edge_order: int.
     :return: gradient field.
@@ -110,16 +110,38 @@ def grad_y(
     Examples:
     """
 
-    return - np.gradient(fld, edge_order=edge_order, axis=0) / cell_size_y
+    return np.gradient(fld, edge_order=edge_order, axis=0) / cell_size_i
+
+
+def grad_iminus(
+        fld: np.ndarray,
+        cell_size_i: Number,
+        edge_order: int=2) -> np.ndarray:
+    """
+    Calculates the array gradient along the -i axis.
+
+    :param fld: array.
+    :type fld: np.array.
+    :param cell_size_i: the cell spacing in the y direction.
+    :type cell_size_i: Number.
+    :param edge_order: the type of edge order used in the Numpy gradient method.
+    :type edge_order: int.
+    :return: gradient field.
+    :rtype: np.array.
+
+    Examples:
+    """
+
+    return - np.gradient(fld, edge_order=edge_order, axis=0) / cell_size_i
 
 
 def dir_deriv(
-        fld: 'array',
+        fld: np.ndarray,
         cell_size_x: Number,
         cell_size_y: Number,
         direct_rad: Number,
         dx_edge_order: int=2,
-        dy_edge_order: int=2) -> 'array':
+        dy_edge_order: int=2) -> np.ndarray:
     """
     Calculates the directional derivative in the provided direction.
 
@@ -138,22 +160,22 @@ def dir_deriv(
     :rtype: Numpy array.
     """
 
-    df_dx = grad_x(
+    df_dx = grad_j(
         fld=fld,
-        cell_size_x=cell_size_x,
+        cell_size_j=cell_size_x,
         edge_order=dx_edge_order)
 
-    df_dy = grad_y(
+    df_dy = grad_iminus(
         fld=fld,
-        cell_size_y=cell_size_y,
+        cell_size_i=cell_size_y,
         edge_order=dy_edge_order)
 
     return df_dx * sin(direct_rad) + df_dy * cos(direct_rad)
 
 
 def magnitude(
-        fld_x: 'array',
-        fld_y: 'array') -> 'array':
+        fld_x: np.ndarray,
+        fld_y: np.ndarray) -> np.ndarray:
     """
     Calculates the magnitude given two 2D arrays:
     the first represents the vector field x component, the second the vector field y component.
@@ -172,8 +194,8 @@ def magnitude(
 
 
 def orients_r(
-        fld_x: 'array',
-        fld_y: 'array') -> 'array':
+        fld_x: np.ndarray,
+        fld_y: np.ndarray) -> np.ndarray:
     """
     Calculates the orientations (as radians) given two 2D arrays:
     the first represents the vector field x component, the second the vector field y component.
@@ -195,8 +217,8 @@ def orients_r(
 
 
 def orients_d(
-        fld_x: 'array',
-        fld_y: 'array') -> 'array':
+        fld_x: np.ndarray,
+        fld_y: np.ndarray) -> np.ndarray:
     """
     Calculates the orientations (as decimal degrees) given two 2D arrays:
     the first represents the vector field x component, the second the vector field y component.
@@ -215,10 +237,10 @@ def orients_d(
 
 
 def divergence(
-        fld_x: 'array',
-        fld_y: 'array',
+        fld_x: np.ndarray,
+        fld_y: np.ndarray,
         cell_size_x: Number,
-        cell_size_y: Number) -> 'array':
+        cell_size_y: Number) -> np.ndarray:
     """
     Calculates the divergence from two 2D arrays:
     the first represents the vector field x component, the second the vector field y component.
@@ -237,17 +259,17 @@ def divergence(
     Examples:
     """
 
-    dfx_dx = grad_x(fld_x, cell_size_x)
-    dfy_dy = grad_y(fld_y, cell_size_y)
+    dfx_dx = grad_j(fld_x, cell_size_x)
+    dfy_dy = grad_iminus(fld_y, cell_size_y)
 
     return dfx_dx + dfy_dy
 
 
 def curl_module(
-        fld_x: 'array',
-        fld_y: 'array',
+        fld_x: np.ndarray,
+        fld_y: np.ndarray,
         cell_size_x: Number,
-        cell_size_y: Number) -> 'array':
+        cell_size_y: Number) -> np.ndarray:
     """
     Calculates the curl module from two 2D arrays:
     the first represents the vector field x component, the second the vector field y component.
@@ -266,17 +288,17 @@ def curl_module(
     Examples:
     """
 
-    dfx_dy = grad_y(fld_x, cell_size_y, edge_order=2)
-    dfy_dx = grad_x(fld_y, cell_size_x, edge_order=1)
+    dfx_dy = grad_iminus(fld_x, cell_size_y, edge_order=2)
+    dfy_dx = grad_j(fld_y, cell_size_x, edge_order=1)
 
     return dfy_dx - dfx_dy
 
 
 def magn_grads(
-        fld_x: 'array',
-        fld_y: 'array',
+        fld_x: np.ndarray,
+        fld_y: np.ndarray,
         dir_cell_sizes: List[Number],
-        axis: str='') -> List['array']:
+        axis: str='') -> List[np.ndarray]:
     """
     Calculates the magnitude gradient along the given direction, based on the field-defining two 2D arrays:
     the first representing the x component, the second the y component.
@@ -298,20 +320,20 @@ def magn_grads(
 
     magn = magnitude(fld_x, fld_y)
     if axis == 'x':
-        return [grad_x(magn, dir_cell_sizes[0])]
+        return [grad_j(magn, dir_cell_sizes[0])]
     elif axis == 'y':
-        return [grad_y(magn, dir_cell_sizes[0])]
+        return [grad_iminus(magn, dir_cell_sizes[0])]
     elif axis == '':
-        return [grad_x(magn, dir_cell_sizes[0]), grad_y(magn, dir_cell_sizes[1])]
+        return [grad_j(magn, dir_cell_sizes[0]), grad_iminus(magn, dir_cell_sizes[1])]
     else:
         raise InputValuesException("Axis must be 'x' or 'y' or '' (for both x and y). '{}' given".format(axis))
 
 
 def magn_grad_along_flowlines(
-        fld_x: 'array',
-        fld_y: 'array',
+        fld_x: np.ndarray,
+        fld_y: np.ndarray,
         cell_size_x: Number,
-        cell_size_y: Number) -> 'array':
+        cell_size_y: Number) -> np.ndarray:
     """
     Calculates gradient along flow lines.
 

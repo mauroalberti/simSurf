@@ -555,7 +555,7 @@ def geosurface_read_gas_input(infile_path):
     return src_analytical_params, src_geographical_params, src_deformational_params
 
 
-def geosurface_export_shapefile_pt3d(shapefile_path, geodata, fields_dict_list, crs=None):
+def try_geosurface_export_shapefile_pt3d(shapefile_path, geodata, fields_dict_list, crs=None):
     """
 
     :param shapefile_path:
@@ -565,20 +565,20 @@ def geosurface_export_shapefile_pt3d(shapefile_path, geodata, fields_dict_list, 
     :return:
     """
 
-    point_shapefile, point_shapelayer = shapefile_create(shapefile_path,
-                                                         ogr.wkbPoint25D,
-                                                         fields_dict_list,
-                                                         crs)
+    shapefile_create(shapefile_path,
+         ogr.wkbPoint25D,
+         fields_dict_list,
+         crs)
 
     field_list = [field_dict["name"] for field_dict in fields_dict_list]
 
     geosurface_XYZ, _ = geodata
     X, Y, Z = geosurface_XYZ
-    assert len(X) == len(Y)
-    assert len(X) == len(Z)
+    #assert len(X) == len(Y)
+    #assert len(X) == len(Z)
     ids = range(len(X))
 
     rec_values_list2 = zip(ids, X, Y, Z)
-    ogr_write_point_result(point_shapelayer, field_list, rec_values_list2)
+    success, msg = try_write_point_shapefile(shapefile_path, field_list, rec_values_list2)
 
-    return True
+    return success, msg

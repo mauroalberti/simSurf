@@ -1,6 +1,11 @@
 # -*- coding: utf-8 -*-
 
 
+class RakeInputException(Exception):
+
+    pass
+
+
 class SlickInputTypeException(Exception):
     """
     Exception for slickenline input type.

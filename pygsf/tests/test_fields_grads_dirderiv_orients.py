@@ -27,11 +27,11 @@ class TestDivergence(unittest.TestCase):
          [1, 1, 1, 1]])
 
         assert np.allclose(
-         grad_x(fld1, cell_size_x=10),
+         grad_j(fld1, cell_size_j=10),
          0.0)
 
         assert np.allclose(
-         grad_y(fld1, cell_size_y=10),
+         grad_iminus(fld1, cell_size_i=10),
          0.0)
 
         fld2 = array([
@@ -40,11 +40,11 @@ class TestDivergence(unittest.TestCase):
          [30, 30, 30, 30]])
 
         assert np.allclose(
-         grad_x(fld2, cell_size_x=10),
+         grad_j(fld2, cell_size_j=10),
          0.0)
 
         assert np.allclose(
-         grad_y(fld2, cell_size_y=10),
+         grad_iminus(fld2, cell_size_i=10),
          -1.0)
 
         assert np.allclose(

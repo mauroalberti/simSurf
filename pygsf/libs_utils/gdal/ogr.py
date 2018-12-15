@@ -1,14 +1,26 @@
 # -*- coding: utf-8 -*-
 
-
 import os
+from typing import Dict, Tuple, Union, List
 
 from osgeo import ogr, osr
 
 from .exceptions import *
 
 
-def read_line_shapefile_via_ogr(line_shp_path):
+def try_open_shapefile(path: str) -> Tuple[bool, Union["OGRLayer", str]]:
+
+    dataSource = ogr.Open(path)
+
+    if dataSource is None:
+        return False, "Unable to open shapefile in provided path"
+
+    shapelayer = dataSource.GetLayer()
+
+    return True, shapelayer
+
+
+def read_line_shapefile_via_ogr(line_shp_path: str) -> Dict:
     """
     Read line shapefile using OGR.
 
@@ -73,6 +85,45 @@ def read_line_shapefile_via_ogr(line_shp_path):
     return dict(success=True, extent=lines_extent, vertices=lines_points)
 
 
+def parse_ogr_type(ogr_type_str: str) -> 'ogr.OGRFieldType':
+    """
+    Parse the provided textual field type to return an actual OGRFieldType.
+
+    :param ogr_type_str: the string referring to the ogr field type.
+    :type ogr_type_str: str.
+    :return: the actural ogr type.
+    :rtype: OGRFieldType.
+    :raise: Exception.
+    """
+
+    if ogr_type_str.endswith("OFTInteger"):
+        return ogr.OFTInteger
+    elif ogr_type_str.endswith("OFTIntegerList"):
+        return ogr.OFTIntegerList
+    elif ogr_type_str.endswith("OFTReal"):
+        return ogr.OFTReal
+    elif ogr_type_str.endswith("OFTRealList"):
+        return ogr.OFTRealList
+    elif ogr_type_str.endswith("OFTString"):
+        return ogr.OFTString
+    elif ogr_type_str.endswith("OFTStringList"):
+        return ogr.OFTStringList
+    elif ogr_type_str.endswith("OFTBinary"):
+        return ogr.OFTBinary
+    elif ogr_type_str.endswith("OFTDate"):
+        return ogr.OFTDate
+    elif ogr_type_str.endswith("OFTTime"):
+        return ogr.OFTTime
+    elif ogr_type_str.endswith("OFTDateTime"):
+        return ogr.OFTDateTime
+    elif ogr_type_str.endswith("OFTInteger64"):
+        return ogr.OFTInteger64
+    elif ogr_type_str.endswith("OFTInteger64List"):
+        return ogr.OFTInteger64List
+    else:
+        raise Exception("Debug: not recognized ogr type")
+
+
 def shapefile_create_def_field(field_def):
     """
 
@@ -80,9 +131,12 @@ def shapefile_create_def_field(field_def):
     :return:
     """
 
-    fieldDef = ogr.FieldDefn(field_def['name'], field_def['ogr_type'])
-    if field_def['ogr_type'] == ogr.OFTString:
-        fieldDef.SetWidth(field_def['width'])
+    name = field_def['name']
+    ogr_type = parse_ogr_type(field_def['ogr_type'])
+
+    fieldDef = ogr.FieldDefn(name, ogr_type)
+    if ogr_type == ogr.OFTString:
+        fieldDef.SetWidth(int(field_def['width']))
 
     return fieldDef
 
@@ -108,16 +162,156 @@ def shapefile_create(path, geom_type, fields_dict_list, crs=None):
         raise OGRIOException('Unable to save shapefile in provided path')
 
     if crs is not None:
-        spatialReference = osr.SpatialReference()
-        spatialReference.ImportFromProj4(crs)
-        outShapelayer = outShapefile.CreateLayer("layer", geom_type, spatialReference)
+        spatial_reference = osr.SpatialReference()
+        spatial_reference.ImportFromProj4(crs)
+        outShapelayer = outShapefile.CreateLayer("layer", spatial_reference, geom_type)
     else:
-        outShapelayer = outShapefile.CreateLayer("layer", geom_type=geom_type)
+        outShapelayer = outShapefile.CreateLayer("layer", None, geom_type)
 
-    map(lambda field_def_params: outShapelayer.CreateField(shapefile_create_def_field(field_def_params)),
-        fields_dict_list)
+    if not outShapelayer:
+        return None, None
+
+    for field_def_params in fields_dict_list:
+        field_def = shapefile_create_def_field(field_def_params)
+        outShapelayer.CreateField(field_def)
 
     return outShapefile, outShapelayer
+
+
+def try_write_point_shapefile(path: str, field_names: List[str], values: List[Tuple], ndx_x_val: int) -> Tuple[bool, str]:
+    """
+    Add point records in an existing shapefile, filling attribute values.
+    The point coordinates, i.e. x, y, z start at ndx_x_val index (index is zero-based) and are
+    assumed to be sequential in order (i.e., 0, 1, 2 or 3, 4, 5).
+
+    :param path: the path of the existing shapefile in which to write.
+    :type path: string.
+    :param field_names: the field names of the attribute table.
+    :type field_names: list of strings.
+    :param values: the values for each record.
+    :type values: list of tuple.
+    :param ndx_x_val: the index of the x coordinate. Y and z should follow.
+    :type ndx_x_val: int.
+    :return: success status and related messages.
+    :rtype: tuple of a boolean and a string.
+    """
+
+    success = False
+    msg = ""
+
+    try:
+
+        dataSource = ogr.Open(path, 1)
+
+        if dataSource is None:
+            return False, "Unable to open shapefile in provided path"
+
+        point_layer = dataSource.GetLayer()
+
+        outshape_featdef = point_layer.GetLayerDefn()
+
+        for ndx, pt_vals in enumerate(values):
+
+            # pre-processing for new feature in output layer
+            curr_Pt_geom = ogr.Geometry(ogr.wkbPoint)
+            curr_Pt_geom.AddPoint(pt_vals[ndx_x_val], pt_vals[ndx_x_val+1], pt_vals[ndx_x_val+2])
+
+            # create a new feature
+            curr_pt_shape = ogr.Feature(outshape_featdef)
+            curr_pt_shape.SetGeometry(curr_Pt_geom)
+
+            for ndx, fld_nm in enumerate(field_names):
+
+                curr_pt_shape.SetField(fld_nm, pt_vals[ndx])
+
+            # add the feature to the output layer
+            point_layer.CreateFeature(curr_pt_shape)
+
+            # destroy no longer used objects
+            curr_Pt_geom.Destroy()
+            curr_pt_shape.Destroy()
+
+        del outshape_featdef
+        del point_layer
+        del dataSource
+
+        success = True
+
+    except Exception as e:
+
+        msg = e
+
+    finally:
+
+        return success, msg
+
+
+def try_write_line_shapefile(path: str, field_names: List[str], values: Dict) -> Tuple[bool, str]:
+    """
+    Add point records in an existing shapefile, filling attribute values.
+
+
+    :param path: the path of the existing shapefile in which to write.
+    :type path: string.
+    :param field_names: the field names of the attribute table.
+    :type field_names: list of strings.
+    :param values: the values for each record.
+    :type values: dict with values made up by two dictionaries.
+    :return: success status and related messages.
+    :rtype: tuple of a boolean and a string.
+    """
+
+    success = False
+    msg = ""
+
+    try:
+
+        dataSource = ogr.Open(path, 1)
+
+        if dataSource is None:
+            return False, "Unable to open shapefile in provided path"
+
+        line_layer = dataSource.GetLayer()
+
+        outshape_featdef = line_layer.GetLayerDefn()
+
+        for id in sorted(values.keys()):
+
+            # pre-processing for new feature in output layer
+            line_geom = ogr.Geometry(ogr.wkbLineString)
+
+            for id_xyz in values[id]["pts"]:
+                x, y, z = id_xyz
+                line_geom.AddPoint(x, y, z)
+
+            # create a new feature
+            line_shape = ogr.Feature(outshape_featdef)
+            line_shape.SetGeometry(line_geom)
+
+            for ndx, fld_nm in enumerate(field_names):
+
+                line_shape.SetField(fld_nm, values[id]["vals"][ndx])
+
+            # add the feature to the output layer
+            line_layer.CreateFeature(line_shape)
+
+            # destroy no longer used objects
+            line_geom.Destroy()
+            line_shape.Destroy()
+
+        del outshape_featdef
+        del line_layer
+        del dataSource
+
+        success = True
+
+    except Exception as e:
+
+        msg = str(e)
+
+    finally:
+
+        return success, msg
 
 
 def ogr_get_solution_shapefile(path, fields_dict_list):
@@ -158,41 +352,3 @@ def ogr_get_solution_shapefile(path, fields_dict_list):
 
     outShapefile, outShapelayer = shapefile_create(path, ogr.wkbPoint25D, fields_dict_list, crs=None)
     return outShapefile, outShapelayer, prev_solution_list
-
-
-def ogr_write_point_result(point_shapelayer, field_list, rec_values_list2, geom_type=ogr.wkbPoint25D):
-    """
-
-    :param point_shapelayer:
-    :param field_list:
-    :param rec_values_list2:
-    :param geom_type:
-    :return:
-    """
-
-    outshape_featdef = point_shapelayer.GetLayerDefn()
-
-    for rec_value_list in rec_values_list2:
-
-        # pre-processing for new feature in output layer
-        curr_Pt_geom = ogr.Geometry(geom_type)
-        if geom_type == ogr.wkbPoint25D:
-            curr_Pt_geom.AddPoint(rec_value_list[1], rec_value_list[2], rec_value_list[3])
-        else:
-            curr_Pt_geom.AddPoint(rec_value_list[1], rec_value_list[2])
-
-        # create a new feature
-        curr_Pt_shape = ogr.Feature(outshape_featdef)
-        curr_Pt_shape.SetGeometry(curr_Pt_geom)
-
-        for fld_name, fld_value in zip(field_list, rec_value_list):
-            curr_Pt_shape.SetField(fld_name, fld_value)
-
-        # add the feature to the output layer
-        point_shapelayer.CreateFeature(curr_Pt_shape)
-
-        # destroy no longer used objects
-        curr_Pt_geom.Destroy()
-        curr_Pt_shape.Destroy()
-
-
